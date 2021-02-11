@@ -1,8 +1,18 @@
+
 <%- include('partials/header') %>
 
 <div class="login">
-<div class="local-login">
-    <form>
+  <div class="social-login">
+    <a href="/auth/google" class="btn btn-block btn-social btn-google"
+      ><i class="fab fa-google"></i>Sign Up with Google</a
+    >
+    <a href="/auth/facebook" class="btn btn-block btn-social btn-facebook"
+      ><i class="fab fa-facebook"></i>Sign Up with Facebook</a
+    >
+  </div>
+  <p class="or-p">-or-</p>
+  <div class="local-login">
+    <form action="/signup" method="POST">
       <h1 class="h3 mb-3 fw-normal">Sign Up to Bugwar</h1>
       <label for="inputUsername" class="visually-hidden">Username</label>
       <input
@@ -10,6 +20,7 @@
         id="inputUsername"
         class="form-control"
         placeholder="Username"
+        name="username"
         required
         autofocus
       />
@@ -17,6 +28,7 @@
       <input
         type="email"
         id="inputEmail"
+        name="email"
         class="form-control"
         placeholder="Email address"
         required
@@ -26,6 +38,55 @@
       <input
         type="password"
         id="inputPassword"
+        class="form-control"
+        placeholder="Password"
+        name="password"
+        required
+      />
+      <div class="checkbox mb-3"></div>
+      <button class="w-100 btn btn-lg btn-primary" type="submit">
+        Sign Up
+      </button>
+      <p class="no-account-p">Already have an account?</p>
+      <a href="/login">Sign In</a>
+    </form>
+    <p class="mt-5 mb-3 text-muted">&copy; BugWar</p>
+  </div>
+</div>
+
+<%- include('partials/footer') %>
+<!-- 
+<%- include('partials/header') %>
+
+<div class="login">
+<div class="local-login">
+    <form action="/signup" method="POST">
+      <h1 class="h3 mb-3 fw-normal">Sign Up to Bugwar</h1>
+      <label for="inputUsername" class="visually-hidden">Username</label>
+      <input
+        type="text"
+        id="inputUsername"
+        name="username"
+        class="form-control"
+        placeholder="Username"
+        required
+        autofocus
+      />
+      <label for="inputEmail" class="visually-hidden">Email address</label>
+      <input
+        type="email"
+        id="inputEmail"
+        name="email"
+        class="form-control"
+        placeholder="Email address"
+        required
+        autofocus
+      />
+      <label for="inputPassword" class="visually-hidden">Password</label>
+      <input
+        type="password"
+        id="inputPassword"
+        name="password"
         class="form-control"
         placeholder="Password"
         required
@@ -40,4 +101,4 @@
     <p class="mt-5 mb-3 text-muted">&copy; BugWar</p>
   </div>
 </div>
-<%- include('partials/footer') %>
+<%- include('partials/footer') %> -->

@@ -2,23 +2,24 @@
 
 <div class="login">
   <div class="social-login">
-    <a href="" class="btn btn-block btn-social btn-google"
+    <a href="/auth/google" class="btn btn-block btn-social btn-google"
       ><i class="fab fa-google"></i>Sign in with Google</a
     >
-    <a href="" class="btn btn-block btn-social btn-facebook"
+    <a href="/auth/facebook" class="btn btn-block btn-social btn-facebook"
       ><i class="fab fa-facebook"></i>Sign in with Facebook</a
     >
   </div>
   <p class="or-p">-or-</p>
   <div class="local-login">
-    <form>
+    <form action="/login" method="POST">
       <h1 class="h3 mb-3 fw-normal">Sign In to Bugwar</h1>
-      <label for="inputEmail" class="visually-hidden">Email address</label>
+      <label for="inputUsername" class="visually-hidden">Username</label>
       <input
-        type="email"
-        id="inputEmail"
+        type="text"
+        id="inputUsername"
         class="form-control"
-        placeholder="Email address"
+        placeholder="Username"
+        name="username"
         required
         autofocus
       />
@@ -28,6 +29,7 @@
         id="inputPassword"
         class="form-control"
         placeholder="Password"
+        name="password"
         required
       />
       <div class="checkbox mb-3"></div>
@@ -35,7 +37,7 @@
         Sign in
       </button>
       <p class="no-account-p">Don’t have an account?</p>
-      <a href="/signup">Sign up</a>
+      <a href="/signup">Sign Up</a>
     </form>
     <p class="mt-5 mb-3 text-muted">&copy; BugWar</p>
   </div>
