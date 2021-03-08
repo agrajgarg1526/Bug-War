@@ -26,6 +26,19 @@ const passport = require("passport");
 app.use(passport.initialize());
 app.use(passport.session());
 
+app.use(function (req, res, next) {
+  res.locals.isAuthenticated = req.isAuthenticated();
+
+  if (req.user) {
+    res.locals.username = req.user.username;
+    res.locals.link = "/users/" + req.user.username;
+    res.locals.tiny_api="https://cdn.tiny.cloud/1/"+process.env.DB_TINY_API_KEY+"/tinymce/5/tinymce.min.js" ;
+    // console.log(res.locals.tiny_api);
+  }
+
+  next();
+});
+
 /////////////////////////////////////////////////
 
 ////////////MONGOOSE SETUP//////////////////////
@@ -34,22 +47,30 @@ const mongoose = require("mongoose");
 const passportLocalMongoose = require("passport-local-mongoose");
 var findOrCreate = require("mongoose-findorcreate");
 
-mongoose.connect("mongodb+srv://"+process.env.DB_MONGO_USERNAME+":"+process.env.DB_MONGO_PASSWORD+"@cluster0.ezz0g.mongodb.net/bugwarDB", {
+mongoose.connect("mongodb://localhost:27017/Bugwar", {
   useNewUrlParser: true,
   useUnifiedTopology: true,
+  useFindAndModify: false
+});
+
+const quesSchema = new mongoose.Schema({
+  // id: String,
+  title: String,
+  body: String,
+  upvote:Number
 });
 
 const UserDetail = new mongoose.Schema({
   username: String,
   email: String,
   password: String,
-  googleId: String,
-  facebookId: String,
+  questions: [quesSchema],
 });
 
 UserDetail.plugin(findOrCreate);
 UserDetail.plugin(passportLocalMongoose);
 
+const Question = mongoose.model("Question", quesSchema);
 const User = mongoose.model("User", UserDetail);
 
 ///////////////////////////////////////////////////
@@ -85,7 +106,7 @@ passport.use(
     function (accessToken, refreshToken, profile, cb) {
       // console.log(profile);
       User.findOrCreate(
-        { googleId: profile.id, email: profile.emails[0].value },
+        { username: profile.id, email: profile.emails[0].value },
         function (err, user) {
           return cb(err, user);
         }
@@ -105,13 +126,14 @@ app.get(
   function (req, res) {
     // Successful authentication, redirect home.
     // console.log(req.user.googleId);
-    res.redirect("/users/" + req.user.googleId);
+    res.redirect("/");
   }
 );
 
 ///////////PASSPORT FACEBOOK STRATEGY/////////////////////////////////
 
 var FacebookStrategy = require("passport-facebook").Strategy;
+const { authenticate } = require("passport");
 
 passport.use(
   new FacebookStrategy(
@@ -124,7 +146,7 @@ passport.use(
     function (accessToken, refreshToken, profile, cb) {
       // console.log(profile);
       User.findOrCreate(
-        { facebookId: profile.id, email: profile.emails[0].value },
+        { username: profile.id, email: profile.emails[0].value },
         function (err, user) {
           return cb(err, user);
         }
@@ -144,15 +166,15 @@ app.get(
   function (req, res) {
     // Successful authentication, redirect home.
     // console.log(req.user);
-    res.redirect("/users/" + req.user.facebookId);
+    res.redirect("/");
   }
 );
 
 /////////////////////////////////////////////////////////
 
 app.get("/", function (req, res) {
-  console.log(req.user);
-  res.render("index", { loggedIn: req.user });
+  // console.log(res.locals);
+  res.render("index");
 });
 
 app.get("/login", function (req, res) {
@@ -168,7 +190,7 @@ app.post("/login", function (req, res) {
     req.logIn(user, function (err) {
       if (err) console.log(err);
 
-      res.redirect("/users/" + user.username);
+      res.redirect("/");
     });
   })(req, res);
 });
@@ -188,17 +210,17 @@ app.post("/signup", function (req, res) {
 
       const username = req.body.username;
       passport.authenticate("local")(req, res, function () {
-        res.redirect("/users/" + username);
+        res.redirect("/");
       });
     }
   );
 });
 
 app.get("/users/:username", function (req, res) {
-  console.log(req.params);
+  // console.log(req.params);
   if (req.user) {
     // logged in
-    res.render("user", { username: req.params.username });
+    res.render("user",{});
   } else {
     // not logged in
     res.render("login");
@@ -207,5 +229,59 @@ app.get("/users/:username", function (req, res) {
 
 app.get("/logout", function (req, res) {
   req.logout();
-  res.redirect("/");
+  req.session.destroy(function (err) {
+    if (err) {
+      return next(err);
+    }
+    // The response should indicate that the user is no longer authenticated.
+    else res.redirect("/");
+  });
+});
+
+app.get("/ask", function (req, res) {
+  if (req.user) {
+    // logged in
+    res.render("ask");
+  } else {
+    // not logged in
+    res.render("login");
+  }
+});
+
+
+app.post("/ask", function (req, res) {
+  // console.log(req.body);
+  // console.log(req.user.username);
+
+  const question = new Question({
+    title: req.body.askTitle,
+    body: req.body.askBody,
+    upvote:0,
+  });
+  question.save();
+
+  User.findOne({username:req.user.username},function(err,foundUser){
+     if(err) console.log(err);
+     else{
+      //  console.log(foundUser);
+       foundUser.questions.push(question);
+       foundUser.save();
+      
+       const link="/users/"+req.user.username+"/questions/"+question.id;
+       res.redirect(link)
+     }
+  });
+});
+
+app.get("/users/:username/questions/:questionID", function (req, res) {
+  // console.log(req.params);
+    
+  Question.findById(req.params.questionID,function(err,foundQuestion){
+    if(err) console.log(err);
+    else{
+      res.render("question", {question:foundQuestion});
+    }
+  })
+   
+
 });

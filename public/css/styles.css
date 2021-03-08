@@ -2,6 +2,7 @@ body {
   background-color: #f6f5f5;
 }
 
+
 /* NAVBAR  */
 
 .navbar {
@@ -22,13 +23,16 @@ body {
   margin: 0 5%;
 }
 
+.search-width{
+  width:15em;
+}
 .login-a {
-  text-decoration: none;
   color: white;
+  text-decoration: none;
 }
 
 .btn-outline-light {
-  width: 100px;
+  width: 170px;
 }
 
 /* HOME PAGE */
@@ -100,4 +104,42 @@ body {
 
 .no-account-p {
   padding-top: 10px;
+}
+
+/* ASK QUESTION */
+
+.ask-h1{
+   margin:2% 0% 0% 10%;
+}
+
+.form-control{
+  margin-top: 0px;
+}
+
+.ask-form{
+  width: 60%;
+  margin: 3% 0% 0% 10%;
+}
+
+.mb-3{
+  margin-bottom: 20%;
+}
+
+.ask-p{
+  margin-bottom: 0;
+  font-size: 0.8em;
+}
+
+.ask-submit{
+  margin-bottom: 10%;
+}
+
+/* QUESTION PAGE */
+
+.question-div{
+  margin:5% 20% 0 20%;
+}
+
+.question-h1{
+  margin-bottom: 5%;
 }

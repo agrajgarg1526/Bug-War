@@ -1,0 +1,39 @@
+<%- include('partials/header') %>
+
+<h1 class="ask-h1">Ask a Public Question</h1>
+<form class="ask-form" action="/ask" method="POST">
+  <div class="mb-3">
+    <label for="askTitle" class="form-label"
+      ><h4>Title</h4>
+      <p class="ask-p">Be specific and to the point</p>
+    </label>
+    <input
+      type="text"
+      class="form-control"
+      id="askTitle"
+      name="askTitle"
+      autocomplete="off"
+      placeholder=" e.g. How to insert a struct variable into a c++ vector inside a loop?"
+      required
+    />
+  </div>
+  <div class="mb-3">
+    <label for="askBody" class="form-label"
+      ><h4>Body</h4>
+      <p class="ask-p">
+        Include all the information someone would need to understand your
+        question
+      </p>
+    </label>
+    <textarea
+      class="form-control"
+      id="askTextArea"
+      name="askBody"
+      rows="14"
+    ></textarea>
+  </div>
+  <div class="col-12 ask-submit">
+    <button type="submit" class="btn btn-primary">Post My Question</button>
+  </div>
+</form>
+<%- include('partials/footer') %>
