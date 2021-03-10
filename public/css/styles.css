@@ -141,5 +141,30 @@ body {
 }
 
 .question-h1{
+  
   margin-bottom: 5%;
+}
+
+
+
+.vote {
+  display: inline-block;
+  cursor: pointer;
+  color: #687074;
+  border: 0;
+  background-color: #f6f5f5;
+} 
+
+.vote:hover{
+  color: #f48024;
+}
+
+.on{
+  color:#f48024;
+}
+.upvote-button{
+  float:left;
+  position: relative;
+  left: 15%;
+  margin-top: 10%;
 }

@@ -1,8 +1,38 @@
 <%- include('partials/header') %>
-<div class="question-div">
-  <h1 class="question-h1"><%=question.title%></h1>
-  <p class="question-p"><%-question.body%></p>
-  <div data-pym-src="https://www.jdoodle.com/iembed/v0/9pQ"></div>
+
+
+<div class="upvote-button"> 
+  <form action="/vote" method="POST">
+    <button class="vote" type="submit" name="value" value="up">
+      <svg width="36" height="36">
+        <path d="M0 15 L15 0 L30 15 z" fill="currentColor"></path>
+      </svg>
+    </button>
+    <input type="hidden" name="id" value=<%=question.id%> />
+    <input type="hidden" name="last" value=<%=question.id%> />
+  </form>
+  
+  <h1 style="text-align: center;"> <%=question.upvote%></h1>
+  
+  <br>
+  
+  <form action="/vote" method="POST">
+    <button class="vote" type="submit" name="value" value="down">
+      <svg width="36" height="36">
+        <path d="M0 0 L15 15 L30 0 z" fill="currentColor"></path>
+      </svg>
+    </button>
+    <input type="hidden" name="id" value=<%=question.id%> />
+  </form>
+  </div>
+
+  
+  <div class="question-div">
+<h1 class="question-h1"><%=question.title%></h1>
+<p class="question-p"><%-question.body%></p>
+<div data-pym-src="https://www.jdoodle.com/iembed/v0/9pQ"></div>
 </div>
+
+
 
 <%- include('partials/footer') %>

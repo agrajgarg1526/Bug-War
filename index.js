@@ -32,7 +32,10 @@ app.use(function (req, res, next) {
   if (req.user) {
     res.locals.username = req.user.username;
     res.locals.link = "/users/" + req.user.username;
-    res.locals.tiny_api="https://cdn.tiny.cloud/1/"+process.env.DB_TINY_API_KEY+"/tinymce/5/tinymce.min.js" ;
+    res.locals.tiny_api =
+      "https://cdn.tiny.cloud/1/" +
+      process.env.DB_TINY_API_KEY +
+      "/tinymce/5/tinymce.min.js";
     // console.log(res.locals.tiny_api);
   }
 
@@ -50,21 +53,23 @@ var findOrCreate = require("mongoose-findorcreate");
 mongoose.connect("mongodb://localhost:27017/Bugwar", {
   useNewUrlParser: true,
   useUnifiedTopology: true,
-  useFindAndModify: false
+  useFindAndModify: false,
 });
 
 const quesSchema = new mongoose.Schema({
   // id: String,
   title: String,
   body: String,
-  upvote:Number
+  upvote: Number,
 });
 
 const UserDetail = new mongoose.Schema({
   username: String,
   email: String,
   password: String,
-  questions: [quesSchema],
+  questions: [String],
+  upvotedQuestions: [String],
+  downvotedQuestions: [String],
 });
 
 UserDetail.plugin(findOrCreate);
@@ -220,7 +225,7 @@ app.get("/users/:username", function (req, res) {
   // console.log(req.params);
   if (req.user) {
     // logged in
-    res.render("user",{});
+    res.render("user", {});
   } else {
     // not logged in
     res.render("login");
@@ -248,7 +253,6 @@ app.get("/ask", function (req, res) {
   }
 });
 
-
 app.post("/ask", function (req, res) {
   // console.log(req.body);
   // console.log(req.user.username);
@@ -256,32 +260,84 @@ app.post("/ask", function (req, res) {
   const question = new Question({
     title: req.body.askTitle,
     body: req.body.askBody,
-    upvote:0,
+    upvote: 0,
   });
   question.save();
 
-  User.findOne({username:req.user.username},function(err,foundUser){
-     if(err) console.log(err);
-     else{
+  User.findOne({ username: req.user.username }, function (err, foundUser) {
+    if (err) console.log(err);
+    else {
       //  console.log(foundUser);
-       foundUser.questions.push(question);
-       foundUser.save();
-      
-       const link="/users/"+req.user.username+"/questions/"+question.id;
-       res.redirect(link)
-     }
+      Question.findOne({ title: req.body.askTitle }, function (err, foundQuestion) {
+        foundUser.questions.push(foundQuestion.id);
+        foundUser.save();
+      });
+    }
   });
+
+  const link = "/users/" + req.user.username + "/questions/" + question.id;
+  res.redirect(link);
 });
 
 app.get("/users/:username/questions/:questionID", function (req, res) {
   // console.log(req.params);
-    
-  Question.findById(req.params.questionID,function(err,foundQuestion){
-    if(err) console.log(err);
-    else{
-      res.render("question", {question:foundQuestion});
-    }
-  })
-   
 
+  Question.findById(req.params.questionID, function (err, foundQuestion) {
+    if (err) console.log(err);
+    else {
+      // console.log(found);
+      res.render("question", { question: foundQuestion });
+    }
+  });
+});
+
+app.post("/vote", function (req, res) {
+  User.findOne({ username: req.user.username }, function (err, foundUser) {
+    if (err) console.log(err);
+    else {
+      if (req.body.value == "up") {
+        var ifInDown = foundUser.downvotedQuestions.findIndex(function (item) {
+          return item === req.body.id;
+        });
+        if (ifInDown === -1) {
+          var index = foundUser.upvotedQuestions.findIndex(function (item) {
+            return item === req.body.id;
+          });
+          if (index === -1) {
+            Question.findOneAndUpdate(
+              { _id: req.body.id },
+              { $inc: { upvote: 1 } },
+              (err, response) => {
+                // console.log(response);
+              }
+            );
+            foundUser.upvotedQuestions.push(req.body.id);
+            foundUser.save();
+          }
+        }
+      } else {
+        var ifInUp = foundUser.upvotedQuestions.findIndex(function (item) {
+          return item === req.body.id;
+        });
+        if (ifInUp === -1) {
+          var index = foundUser.downvotedQuestions.findIndex(function (item) {
+            return item === req.body.id;
+          });
+          if (index === -1) {
+            Question.findOneAndUpdate(
+              { _id: req.body.id },
+              { $inc: { upvote: -1 } },
+              (err, response) => {
+                // console.log(response);
+              }
+            );
+            foundUser.downvotedQuestions.push(req.body.id);
+            foundUser.save();
+          }
+        }
+      }
+    }
+  });
+  const link = "/users/" + req.user.username + "/questions/" + req.body.id;
+  res.redirect(link);
 });
