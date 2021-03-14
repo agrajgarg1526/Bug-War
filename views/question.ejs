@@ -1,7 +1,7 @@
 <%- include('partials/header') %>
 
 
-<div class="upvote-button"> 
+<div class="upvote-button">
   <form action="/vote" method="POST">
     <button class="vote" type="submit" name="value" value="up">
       <svg width="36" height="36">
@@ -9,13 +9,12 @@
       </svg>
     </button>
     <input type="hidden" name="id" value=<%=question.id%> />
-    <input type="hidden" name="last" value=<%=question.id%> />
   </form>
-  
+
   <h1 style="text-align: center;"> <%=question.upvote%></h1>
-  
+
   <br>
-  
+
   <form action="/vote" method="POST">
     <button class="vote" type="submit" name="value" value="down">
       <svg width="36" height="36">
@@ -24,15 +23,45 @@
     </button>
     <input type="hidden" name="id" value=<%=question.id%> />
   </form>
-  </div>
-
-  
-  <div class="question-div">
-<h1 class="question-h1"><%=question.title%></h1>
-<p class="question-p"><%-question.body%></p>
-<div data-pym-src="https://www.jdoodle.com/iembed/v0/9pQ"></div>
 </div>
 
+<form action="/users/<%=user%>" method="GET">
+  <button type="submit" class="btn btn-secondary userpost">Posted By <br><%=user%></button>
+</form>
 
+<a href="#ask-answer" class="answerthis"><button type="submit" class="btn btn-primary">Answer this Question</button></a>
 
-<%- include('partials/footer') %>
+<div class="question-div">
+  <h1 class="question-h1"><%=question.title%></h1>
+  <p class="question-p"><%-question.body%></p>
+  <div data-pym-src="https://www.jdoodle.com/iembed/v0/9pQ"></div>
+</div>
+
+<br><br><br>
+
+<div class="answer-div">
+  <h4 class="count-answer"><%=question.answers.length%> Answers:</h4>
+
+  <%for(let i=0;i<question.answers.length;i++){%>
+    <br><hr><br>
+
+  <p><%-question.answers[i]%></p>
+  
+  <%}%>
+<br><hr>
+</div>
+
+<br>
+<form id="ask-answer" class="ask-answer" action="/answer/<%=question.id%>" method="POST">
+  <div class="mb-3">
+    <label for="askAnswer" class="form-label">
+      <h4>Your Answer</h4>
+    </label>
+    <textarea class="form-control" id="askTextArea" name="askAnswer" rows="14"></textarea>
+  </div>
+  <div class="col-12 ask-submit">
+    <button type="submit" class="btn btn-primary">Post My Answer</button>
+  </div>
+  </form>
+
+  <%- include('partials/footer') %>

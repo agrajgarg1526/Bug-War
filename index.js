@@ -61,6 +61,8 @@ const quesSchema = new mongoose.Schema({
   title: String,
   body: String,
   upvote: Number,
+  answers: [String],
+  askedBy:String
 });
 
 const UserDetail = new mongoose.Schema({
@@ -187,6 +189,7 @@ app.get("/login", function (req, res) {
 });
 
 app.post("/login", function (req, res) {
+ 
   passport.authenticate("local", function (err, user, info) {
     if (err) console.log(err);
 
@@ -223,13 +226,13 @@ app.post("/signup", function (req, res) {
 
 app.get("/users/:username", function (req, res) {
   // console.log(req.params);
-  if (req.user) {
-    // logged in
-    res.render("user", {});
-  } else {
-    // not logged in
-    res.render("login");
-  }
+  // if (req.user) {
+  // logged in
+  res.render("user", {});
+  // } else {
+  // not logged in
+  // res.render("login");
+  // }
 });
 
 app.get("/logout", function (req, res) {
@@ -255,12 +258,13 @@ app.get("/ask", function (req, res) {
 
 app.post("/ask", function (req, res) {
   // console.log(req.body);
-  // console.log(req.user.username);
+  // console.log(req.user);
 
   const question = new Question({
     title: req.body.askTitle,
     body: req.body.askBody,
     upvote: 0,
+    askedBy:req.user.username
   });
   question.save();
 
@@ -268,25 +272,36 @@ app.post("/ask", function (req, res) {
     if (err) console.log(err);
     else {
       //  console.log(foundUser);
-      Question.findOne({ title: req.body.askTitle }, function (err, foundQuestion) {
-        foundUser.questions.push(foundQuestion.id);
-        foundUser.save();
-      });
+      Question.findOne(
+        { title: req.body.askTitle },
+        function (err, foundQuestion) {
+          foundUser.questions.push(foundQuestion.id);
+          foundUser.save();
+        }
+      );
     }
   });
 
-  const link = "/users/" + req.user.username + "/questions/" + question.id;
+  const link ="/questions/" + question.id;
   res.redirect(link);
 });
 
-app.get("/users/:username/questions/:questionID", function (req, res) {
+app.get("/questions/:questionID", function (req, res) {
   // console.log(req.params);
 
   Question.findById(req.params.questionID, function (err, foundQuestion) {
     if (err) console.log(err);
     else {
       // console.log(found);
-      res.render("question", { question: foundQuestion });
+      User.findOne({ username: req.user.username }, function (err, foundUser) {
+        if (err) console.log(err);
+        else {
+          res.render("question", {
+            question: foundQuestion,
+            user: foundUser.username,
+          });
+        }
+      });
     }
   });
 });
@@ -315,7 +330,7 @@ app.post("/vote", function (req, res) {
             foundUser.save();
           }
         }
-      } else {
+      } else if (req.body.value == "down") {
         var ifInUp = foundUser.upvotedQuestions.findIndex(function (item) {
           return item === req.body.id;
         });
@@ -338,6 +353,40 @@ app.post("/vote", function (req, res) {
       }
     }
   });
-  const link = "/users/" + req.user.username + "/questions/" + req.body.id;
+  const link = "/questions/" + req.body.id;
   res.redirect(link);
+});
+
+app.post("/answer/:questionID", function (req, res) {
+  console.log(req.body);
+  console.log(req.params.questionID);
+  Question.findById(req.params.questionID, function (err, foundQuestion) {
+    if (err) console.log(err);
+    else {
+      foundQuestion.answers.push(req.body.askAnswer);
+      foundQuestion.save();
+      const link = "/questions/" + req.params.questionID;
+  res.redirect(link);
+
+      // console.log(foundQuestion);
+    }
+  });
+});
+
+app.get("/list", function (req, res) {
+  console.log(req);
+  if (req.user) {
+    // logged in
+    Question.find(function(err,foundQuestions){
+       if(err) console.log(err);
+       else{
+        //  console.log(foundQuestions);
+        res.render("list",{foundQuestions:foundQuestions});
+       }
+    });
+   
+  } else {
+    // not logged in
+    res.render("login");
+  }
 });

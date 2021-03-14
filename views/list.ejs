@@ -1,0 +1,40 @@
+<%- include('partials/header') %>
+<h1 class="ask-h1">Questions</h1>
+<form action="/ask" method="GET">
+    <button type="submit" class="btn btn-primary askquestion">Ask a Question
+
+    </button>
+</form>
+<div class="list-div">
+    <%for(let i=0;i<foundQuestions.length;i++){%>
+
+
+    <hr>
+    <p>
+        <a class="list-a" href="/questions/<%=foundQuestions[i].id%>"><%=foundQuestions[i].title%></a>
+
+        <a class="upvote-a" href="/questions/<%=foundQuestions[i].id%>">
+            <div class="list-upvote-div">
+                Upvotes
+                <br>
+                <%=foundQuestions[i].upvote%>
+
+            </div>
+            <div class="list-upvote-div">
+                Answers
+                <br>
+                <%=foundQuestions[i].answers.length%>
+            </div>
+        </a>
+        <div class="list-upvote-div askedby">
+
+            <%let link=username===foundQuestions[i].askedBy?"You":foundQuestions[i].askedBy;%>
+            asked By :
+            <a class="ask-user" href="/users/<%=foundQuestions[i].askedBy%>"><%=link%></a>
+        </div>
+    </p>
+
+    <%}%>
+<hr>
+</div>
+<%- include('partials/footer') %>
