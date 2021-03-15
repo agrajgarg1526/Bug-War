@@ -43,12 +43,47 @@
   <h4 class="count-answer"><%=question.answers.length%> Answers:</h4>
 
   <%for(let i=0;i<question.answers.length;i++){%>
-    <br><hr><br>
+  <hr>
 
-  <p><%-question.answers[i]%></p>
+  <div class="answer-upvote-button">
+
+    <form action="/voteAnswer" method="POST">
+      <button class="vote" type="submit" name="value" value="up">
+        <svg width="18" height="18">
+          <path d="M0 7.5 L7.5 0 L15 7.5 z" fill="currentColor"></path>
+        </svg>
+      </button>
+      <input type="hidden" name="answerid" value=<%=question.answers[i].id%> />
+    <input type="hidden" name="id" value=<%=question.id%> />
+
+    </form>
+
+    <h3 style="text-align: center;"> <%=question.answers[i].upvote%></h3>
+
+    <form action="/voteAnswer" method="POST">
+      <button class="vote" type="submit" name="value" value="down">
+        <svg width="18" height="18">
+          <path d="M0 0 L7.5 7.5 L15 0 z" fill="currentColor"></path>
+        </svg>
+      </button>
+      <input type="hidden" name="answerid" value=<%=question.answers[i].id%> />
+      <input type="hidden" name="id" value=<%=question.id%> />
+    </form>
+
+  </div>
   
+  <p><%-question.answers[i].answer%></p>
+
+  <div class="answeredBy">
+    <%let link=username===question.answers[i].answeredBy?"You":question.answers[i].answeredBy;%>
+    answered By :
+    <a class="ask-user" href="/users/<%=question.answers[i].  answeredBy%>"><%=link%></a>
+  </div>
+  <br>
+  <br>
+  <br>
   <%}%>
-<br><hr>
+<hr>
 </div>
 
 <br>

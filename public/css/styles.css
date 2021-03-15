@@ -97,6 +97,12 @@ body {
   margin: 2% 0;
 }
 
+.alert{
+  color:red;
+  margin: 0;
+  padding: 0;
+  font-size: 0.8em;
+}
 .or-p {
   display: inline-block;
   position: relative;
@@ -182,7 +188,7 @@ body {
 .userpost{
   float:right;
   margin-top: 5%;
-  margin-right: 3%;
+  margin-right: 5%;
 }
 
 .answer-div{
@@ -194,7 +200,7 @@ body {
 .answerthis{
   float:right;
   margin-top: 12%;
-  margin-right: -13%;
+  margin-right: -10.5%;
 }
 
 /* QUESTION LIST */
@@ -233,4 +239,16 @@ body {
 
 .ask-user{
   text-decoration: none;
+}
+
+.answeredBy{
+  float:right;
+  color:#6e7c7c;
+  position: relative;
+}
+
+.answer-upvote-button{
+  float:left;
+  position: absolute;
+  left: 12%;
 }
