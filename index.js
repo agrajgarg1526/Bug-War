@@ -134,7 +134,7 @@ passport.use(
     {
       clientID: process.env.DB_GOOGLE_CLIENT_ID,
       clientSecret: process.env.DB_GOOGLE_CLIENT_SECRET,
-      callbackURL: "http://localhost:3000/auth/google/bugwar",
+      callbackURL: "https://bug-war.herokuapp.com/auth/google/bugwar",
     },
     function (accessToken, refreshToken, profile, cb) {
       // console.log(profile.emails[0].value);
