@@ -178,7 +178,7 @@ passport.use(
     {
       clientID: process.env.DB_FB_APP_ID,
       clientSecret: process.env.DB_FB_APP_SECRET,
-      callbackURL: "http://localhost:3000/auth/facebook/bugwar",
+      callbackURL: "https://bug-war.herokuapp.com/auth/facebook/bugwar",
       profileFields: ["id", "emails", "name"],
     },
     function (accessToken, refreshToken, profile, cb) {
