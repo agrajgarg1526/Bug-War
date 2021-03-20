@@ -1,3 +1,4 @@
+var helper = require("./date");
 const express = require("express");
 const bodyParser = require("body-parser");
 require("dotenv").config();
@@ -80,11 +81,14 @@ const quesSchema = new mongoose.Schema({
       upvote: Number,
       upvotedBy: [String],
       downvotedBy: [String],
+      time: { type: Date, default: Date.now }
     },
   ],
   askedBy: String,
-  time : { type : Date, default: Date.now},
+  time: { type: Date, default: Date.now },
 });
+
+// quesSchema.plugin(timeZone, { paths: ['date', 'subDocument.subDate'] });
 
 const UserDetail = new mongoose.Schema({
   username: String,
@@ -324,18 +328,20 @@ app.post("/ask", function (req, res) {
 });
 
 app.get("/questions/:questionID", function (req, res) {
-  // console.log(req.params);
-  
+  console.log(req.query);
+
   Question.findById(req.params.questionID, function (err, foundQuestion) {
     if (err) console.log(err);
     else {
-      console.log((Date.now()-foundQuestion.time)/60000);
+      // console.log((Date.now() - foundQuestion.time) / 60000);
       User.findOne({ username: req.user.username }, function (err, foundUser) {
         if (err) console.log(err);
         else {
           res.render("question", {
             question: foundQuestion,
+            date: helper,
             user: foundUser.username,
+            query:req.query.sort
           });
         }
       });
@@ -418,17 +424,49 @@ app.post("/answer/:questionID", function (req, res) {
 
 app.get("/list", function (req, res) {
   // console.log(req);
-  console.log(Date.now());
+  // console.log(req.query);
   if (req.user) {
     // logged in
-    Question.find(function (err, foundQuestions) {
-      if (err) console.log(err);
-      else {
-        //  console.log(foundQuestions[0].answers.length);
-        res.render("list", { foundQuestions: foundQuestions });
-      }
-    });
-    // .sort({upvote:"asc"});
+
+    if (req.query.sort == "asc") {
+      Question.find(function (err, foundQuestions) {
+        if (err) console.log(err);
+        else {
+          //  console.log(foundQuestions[0].answers.length);
+          res.render("list", {
+            foundQuestions: foundQuestions,
+            date: helper,
+            query: req.query.sort,
+          });
+        }
+      }).sort({ upvote: "asc" });
+    }
+    else if(req.query.sort == "dec"){
+      Question.find(function (err, foundQuestions) {
+        if (err) console.log(err);
+        else {
+          //  console.log(foundQuestions[0].answers.length);
+          res.render("list", {
+            foundQuestions: foundQuestions,
+            date: helper,
+            query: req.query.sort,
+          });
+        }
+      }).sort({ upvote:"desc" });
+    }
+    else if(req.query.sort == "time" || !req.query.sort){
+      Question.find(function (err, foundQuestions) {
+        if (err) console.log(err);
+        else {
+          //  console.log(foundQuestions[0].answers.length);
+          res.render("list", {
+            foundQuestions: foundQuestions,
+            date: helper,
+            query: req.query.sort,
+          });
+        }
+      }).sort({time:-1});
+    }
   } else {
     // not logged in
     res.redirect("login");
@@ -449,47 +487,44 @@ app.post("/voteAnswer", function (req, res) {
                 return item === req.user.username;
               }
             );
-            
+
             if (ifInDown === -1) {
               var index = foundQuestion.answers[i].upvotedBy.findIndex(
                 function (item) {
                   return item === req.user.username;
                 }
               );
-              
+
               if (index === -1) {
                 foundQuestion.answers[i].upvote++;
                 foundQuestion.answers[i].upvotedBy.push(req.user.username);
                 foundQuestion.save();
-
               }
             }
-          }
-          else if (req.body.value == "down") {
-            var ifInUp = foundQuestion.answers[i].upvotedBy.findIndex(
-              function (item) {
-                return item === req.user.username;
-              }
-            );
-            
+          } else if (req.body.value == "down") {
+            var ifInUp = foundQuestion.answers[i].upvotedBy.findIndex(function (
+              item
+            ) {
+              return item === req.user.username;
+            });
+
             if (ifInUp === -1) {
               var index = foundQuestion.answers[i].downvotedBy.findIndex(
                 function (item) {
                   return item === req.user.username;
-                r}
+                  r;
+                }
               );
-              
+
               if (index === -1) {
                 foundQuestion.answers[i].upvote--;
                 foundQuestion.answers[i].downvotedBy.push(req.user.username);
                 foundQuestion.save();
-
               }
             }
           }
         }
       }
-      
     }
   });
   const link = "/questions/" + req.body.id;

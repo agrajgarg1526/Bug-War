@@ -1,16 +1,48 @@
 <%- include('partials/header') %>
+
 <h1 class="ask-h1">Questions</h1>
 <form action="/ask" method="GET">
     <button type="submit" class="btn btn-primary askquestion">Ask a Question
-
     </button>
 </form>
+
+<div class="btn-group-question">
+    <form action="list" method="GET">
+        <button style="width: 16em; text-size-adjust: 40% ;" type="button" class="btn btn-secondary dropdown-toggle btn-sm" data-toggle="dropdown"
+            aria-haspopup="true" aria-expanded="false">
+            <%if(query=="asc"){%>
+                Sort by : Upvotes: Low to High
+            <%}%>
+            <%if(query=="dec"){%>
+                Sort by : Upvotes: High to Low
+            <%}%> 
+            <%if(query=="time"){%>
+                Sort by : Recently Asked
+            <%}%> 
+            <%if(!query){%>
+                Sort by : Select
+            <%}%>
+            
+        </button>
+
+        <div class="dropdown-menu">
+            <button name="sort" value="asc" class="dropdown-item" type="submit"> Upvotes: Low to High</button>
+            <button name="sort" value="dec" class="dropdown-item" type="submit">Upvotes: High to Low</button>
+            <button name="sort" value="time" class="dropdown-item" type="submit">Recently Asked</button>
+        </div>
+    </form>
+
+</div>
+<br>
+<br>
+<br>
+
 <div class="list-div">
     <%for(let i=0;i<foundQuestions.length;i++){%>
-
-
     <hr>
+
     <p>
+
         <a class="list-a" href="/questions/<%=foundQuestions[i].id%>"><%=foundQuestions[i].title%></a>
 
         <a class="upvote-a" href="/questions/<%=foundQuestions[i].id%>">
@@ -25,16 +57,21 @@
                 <br>
                 <%=foundQuestions[i].answers.length%>
             </div>
+
+            
         </a>
+
         <div class="list-upvote-div askedby">
 
             <%let link=username===foundQuestions[i].askedBy?"You":foundQuestions[i].askedBy;%>
             asked By :
             <a class="ask-user" href="/users/<%=foundQuestions[i].askedBy%>"><%=link%></a>
+            <%= date.date(foundQuestions[i].time)%>
         </div>
     </p>
 
     <%}%>
 <hr>
+
 </div>
 <%- include('partials/footer') %>

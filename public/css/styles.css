@@ -241,6 +241,7 @@ body {
   text-decoration: none;
 }
 
+/* ANSWERS */
 .answeredBy{
   float:right;
   color:#6e7c7c;
@@ -251,4 +252,17 @@ body {
   float:left;
   position: absolute;
   left: 12%;
+}
+
+.btn-group-question{
+  /* display: inline-block; */
+  float: right;
+  position: relative;
+  right: 20%;
+  margin-top: 3%;
+}
+
+.btn-group-answer{
+  position: relative;
+  left: 70%;
 }

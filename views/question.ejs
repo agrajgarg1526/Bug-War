@@ -41,62 +41,97 @@
 
 <div class="answer-div">
   <h4 class="count-answer"><%=question.answers.length%> Answers:</h4>
+  <div class="btn-group-answer">
 
-  <%for(let i=0;i<question.answers.length;i++){%>
-  <hr>
+    <form action="/questions/<%=question.id%>" method="GET">
+      <button style="width: 16em; text-size-adjust: 40% ;" type="button"
+        class="btn btn-secondary dropdown-toggle btn-sm" data-toggle="dropdown" aria-haspopup="true"
+        aria-expanded="false">
 
-  <div class="answer-upvote-button">
+        <%if(query=="asc"){%>
+        Sort by : Upvotes: High to Low
+        <%question.answers.sort(function(a, b) {%>
+          <%return b.upvote - a.upvote;%>
+          <%});%>
+        <%}%>
 
-    <form action="/voteAnswer" method="POST">
-      <button class="vote" type="submit" name="value" value="up">
-        <svg width="18" height="18">
-          <path d="M0 7.5 L7.5 0 L15 7.5 z" fill="currentColor"></path>
-        </svg>
+      <%if(query=="time"){%>
+        Sort by : Recently Answered
+        <%question.answers.sort(function(a, b) {%>
+          <%return b.time - a.time;%>
+          <%});%>
+        <%}%> 
+      <%if(!query){%>
+        Sort by : Select
+        <%}%>
       </button>
-      <input type="hidden" name="answerid" value=<%=question.answers[i].id%> />
-    <input type="hidden" name="id" value=<%=question.id%> />
 
-    </form>
-
-    <h3 style="text-align: center;"> <%=question.answers[i].upvote%></h3>
-
-    <form action="/voteAnswer" method="POST">
-      <button class="vote" type="submit" name="value" value="down">
-        <svg width="18" height="18">
-          <path d="M0 0 L7.5 7.5 L15 0 z" fill="currentColor"></path>
-        </svg>
-      </button>
-      <input type="hidden" name="answerid" value=<%=question.answers[i].id%> />
-      <input type="hidden" name="id" value=<%=question.id%> />
+      <div class="dropdown-menu">
+        <button name="sort" value="asc" class="dropdown-item" type="submit"> Upvotes: High to Low</button>
+        <button name="sort" value="time" class="dropdown-item" type="submit">Recently Answered</button>
+      </div>
     </form>
 
   </div>
+
   
-  <p><%-question.answers[i].answer%></p>
+  
 
-  <div class="answeredBy">
-    <%let link=username===question.answers[i].answeredBy?"You":question.answers[i].answeredBy;%>
-    answered By :
-    <a class="ask-user" href="/users/<%=question.answers[i].  answeredBy%>"><%=link%></a>
-  </div>
-  <br>
-  <br>
-  <br>
-  <%}%>
+        <%for(let i=0;i<question.answers.length;i++){%>
+        <hr>
+
+        <div class="answer-upvote-button">
+
+          <form action="/voteAnswer" method="POST">
+            <button class="vote" type="submit" name="value" value="up">
+              <svg width="18" height="18">
+                <path d="M0 7.5 L7.5 0 L15 7.5 z" fill="currentColor"></path>
+              </svg>
+            </button>
+            <input type="hidden" name="answerid" value=<%=question.answers[i].id%> />
+            <input type="hidden" name="id" value=<%=question.id%> />
+
+          </form>
+
+          <h3 style="text-align: center;"> <%=question.answers[i].upvote%></h3>
+
+          <form action="/voteAnswer" method="POST">
+            <button class="vote" type="submit" name="value" value="down">
+              <svg width="18" height="18">
+                <path d="M0 0 L7.5 7.5 L15 0 z" fill="currentColor"></path>
+              </svg>
+            </button>
+            <input type="hidden" name="answerid" value=<%=question.answers[i].id%> />
+            <input type="hidden" name="id" value=<%=question.id%> />
+          </form>
+
+        </div>
+
+        <p><%-question.answers[i].answer%></p>
+
+        <div class="answeredBy">
+          <%let link=username===question.answers[i].answeredBy?"You":question.answers[i].answeredBy;%>
+          answered By :
+          <a class="ask-user" href="/users/<%=question.answers[i].  answeredBy%>"><%=link%></a>
+          <%= date.date(question.answers[i].time)%>
+        </div>
+        <br>
+        <br>
+        <%}%>
 <hr>
 </div>
 
 <br>
 <form id="ask-answer" class="ask-answer" action="/answer/<%=question.id%>" method="POST">
-  <div class="mb-3">
-    <label for="askAnswer" class="form-label">
-      <h4>Your Answer</h4>
-    </label>
-    <textarea class="form-control" id="askTextArea" name="askAnswer" rows="14"></textarea>
-  </div>
-  <div class="col-12 ask-submit">
-    <button type="submit" class="btn btn-primary">Post My Answer</button>
-  </div>
-  </form>
+        <div class="mb-3">
+          <label for="askAnswer" class="form-label">
+            <h4>Your Answer</h4>
+          </label>
+          <textarea class="form-control" id="askTextArea" name="askAnswer" rows="14"></textarea>
+        </div>
+        <div class="col-12 ask-submit">
+          <button type="submit" class="btn btn-primary">Post My Answer</button>
+        </div>
+    </form>
 
-  <%- include('partials/footer') %>
+    <%- include('partials/footer') %>
