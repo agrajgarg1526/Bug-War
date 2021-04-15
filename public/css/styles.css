@@ -266,3 +266,12 @@ body {
   position: relative;
   left: 70%;
 }
+
+.delete-div{
+  padding-bottom: 100px;
+}
+.delete-ques{
+  float: right;
+  position: relative;
+  right: 120px;
+}

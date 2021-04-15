@@ -9,7 +9,7 @@ const mongoose = require("mongoose");
 const passportLocalMongoose = require("passport-local-mongoose");
 var findOrCreate = require("mongoose-findorcreate");
 
-mongoose.connect(process.env.DB_MONGO_URL, {
+mongoose.connect("mongodb://localhost:27017/Bugwar", {
   useNewUrlParser: true,
   useUnifiedTopology: true,
   useFindAndModify: false,
@@ -34,7 +34,7 @@ app.use(
 
 app.set("view engine", "ejs");
 
-app.listen(process.env.PORT || 3000, function () {
+app.listen(3000, function () {
   console.log("Server Running at 3000 port");
 });
 
@@ -81,7 +81,7 @@ const quesSchema = new mongoose.Schema({
       upvote: Number,
       upvotedBy: [String],
       downvotedBy: [String],
-      time: { type: Date, default: Date.now }
+      time: { type: Date, default: Date.now },
     },
   ],
   askedBy: String,
@@ -98,6 +98,7 @@ const UserDetail = new mongoose.Schema({
   questions: [String],
   upvotedQuestions: [String],
   downvotedQuestions: [String],
+  time: { type: Date, default: Date.now },
 });
 
 UserDetail.plugin(findOrCreate);
@@ -134,7 +135,7 @@ passport.use(
     {
       clientID: process.env.DB_GOOGLE_CLIENT_ID,
       clientSecret: process.env.DB_GOOGLE_CLIENT_SECRET,
-      callbackURL: "https://bug-war.herokuapp.com/auth/google/bugwar",
+      callbackURL: "http://localhost:3000/auth/google/bugwar",
     },
     function (accessToken, refreshToken, profile, cb) {
       // console.log(profile.emails[0].value);
@@ -178,7 +179,7 @@ passport.use(
     {
       clientID: process.env.DB_FB_APP_ID,
       clientSecret: process.env.DB_FB_APP_SECRET,
-      callbackURL: "https://bug-war.herokuapp.com/auth/facebook/bugwar",
+      callbackURL: "http://localhost:3000/auth/facebook/bugwar",
       profileFields: ["id", "emails", "name"],
     },
     function (accessToken, refreshToken, profile, cb) {
@@ -268,7 +269,13 @@ app.get("/users/:username", function (req, res) {
   // console.log(req.params);
   // if (req.user) {
   // logged in
-  res.render("user", {});
+  User.findOne({ username: req.user.username }, function (err, foundUser) {
+    if (err) console.log(err);
+    else {
+      res.render("user", { user: foundUser, date: helper });
+    }
+  });
+ 
   // } else {
   // not logged in
   // res.render("login");
@@ -328,22 +335,16 @@ app.post("/ask", function (req, res) {
 });
 
 app.get("/questions/:questionID", function (req, res) {
-  console.log(req.query);
+  // console.log(req.params.questionID);
 
   Question.findById(req.params.questionID, function (err, foundQuestion) {
     if (err) console.log(err);
     else {
-      // console.log((Date.now() - foundQuestion.time) / 60000);
-      User.findOne({ username: req.user.username }, function (err, foundUser) {
-        if (err) console.log(err);
-        else {
-          res.render("question", {
-            question: foundQuestion,
-            date: helper,
-            user: foundUser.username,
-            query:req.query.sort
-          });
-        }
+      res.render("question", {
+        question: foundQuestion,
+        date: helper,
+        user: foundQuestion.askedBy,
+        query: req.query.sort,
       });
     }
   });
@@ -403,7 +404,7 @@ app.post("/vote", function (req, res) {
 app.post("/answer/:questionID", function (req, res) {
   // console.log(req.body);
   // git log
-  console.log(req.params.questionID);
+  // console.log(req.params.questionID);
   Question.findById(req.params.questionID, function (err, foundQuestion) {
     if (err) console.log(err);
     else {
@@ -440,8 +441,7 @@ app.get("/list", function (req, res) {
           });
         }
       }).sort({ upvote: "asc" });
-    }
-    else if(req.query.sort == "dec"){
+    } else if (req.query.sort == "dec") {
       Question.find(function (err, foundQuestions) {
         if (err) console.log(err);
         else {
@@ -452,9 +452,8 @@ app.get("/list", function (req, res) {
             query: req.query.sort,
           });
         }
-      }).sort({ upvote:"desc" });
-    }
-    else if(req.query.sort == "time" || !req.query.sort){
+      }).sort({ upvote: "desc" });
+    } else if (req.query.sort == "time" || !req.query.sort) {
       Question.find(function (err, foundQuestions) {
         if (err) console.log(err);
         else {
@@ -465,7 +464,7 @@ app.get("/list", function (req, res) {
             query: req.query.sort,
           });
         }
-      }).sort({time:-1});
+      }).sort({ time: -1 });
     }
   } else {
     // not logged in
@@ -474,7 +473,7 @@ app.get("/list", function (req, res) {
 });
 
 app.post("/voteAnswer", function (req, res) {
-  console.log(req.body);
+  // console.log(req.body);
   Question.findById(req.body.id, function (err, foundQuestion) {
     if (err) console.log(err);
     else {
@@ -529,4 +528,44 @@ app.post("/voteAnswer", function (req, res) {
   });
   const link = "/questions/" + req.body.id;
   res.redirect(link);
+});
+
+app.post("/deleteQues/:questionID", function (req, res) {
+  let id = req.params.questionID;
+  // console.log(id);
+
+  // console.log(req.user.username);
+
+  Question.findByIdAndDelete(id, function (err, docs) {
+    if (err) {
+      console.log(err);
+    } else {
+      User.find({}, function (err, foundUser) {
+        if (err) console.log(err);
+        else {
+          //  console.log(foundUser.length);
+          for (let i = 0; i < foundUser.length; i++) {
+            const isLargeNumber = (element) => element === id;
+
+            let ques = foundUser[i].questions.findIndex(isLargeNumber);
+            let upQues = foundUser[i].upvotedQuestions.findIndex(isLargeNumber);
+            let downQues = foundUser[i].downvotedQuestions.findIndex(
+              isLargeNumber
+            );
+            // console.log(ques);
+            // console.log(upQues);
+            // console.log(downQues);
+            if (ques != -1) foundUser[i].questions.splice(ques, 1);
+            if (upQues != -1) foundUser[i].upvotedQuestions.splice(upQues, 1);
+            if (downQues != -1)
+              foundUser[i].downvotedQuestions.splice(downQues, 1);
+
+            foundUser[i].save();
+          }
+        }
+      });
+
+      res.redirect("/list");
+    }
+  });
 });

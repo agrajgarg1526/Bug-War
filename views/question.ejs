@@ -26,7 +26,12 @@
 </div>
 
 <form action="/users/<%=user%>" method="GET">
-  <button type="submit" class="btn btn-secondary userpost">Posted By <br><%=user%></button>
+  <%let link=username===user?"You":user;%>
+  <button type="submit" class="btn btn-secondary userpost">Posted By
+    <!-- <br> -->
+    <br>
+    <%=link%>
+  </button>
 </form>
 
 <a href="#ask-answer" class="answerthis"><button type="submit" class="btn btn-primary">Answer this Question</button></a>
@@ -51,15 +56,15 @@
         <%if(query=="asc"){%>
         Sort by : Upvotes: High to Low
         <%question.answers.sort(function(a, b) {%>
-          <%return b.upvote - a.upvote;%>
-          <%});%>
+        <%return b.upvote - a.upvote;%>
+        <%});%>
         <%}%>
 
       <%if(query=="time"){%>
         Sort by : Recently Answered
         <%question.answers.sort(function(a, b) {%>
-          <%return b.time - a.time;%>
-          <%});%>
+        <%return b.time - a.time;%>
+        <%});%>
         <%}%> 
       <%if(!query){%>
         Sort by : Select
@@ -134,4 +139,11 @@
         </div>
     </form>
 
+    <div class="delete-div">
+      <%if(username==user){%>
+      <form action="/deleteQues/<%=question.id%>" method="POST">
+        <button type="submit" class="btn btn-danger delete-ques">Delete this Question</button>
+      </form>
+    </div>
+    <%}%>
     <%- include('partials/footer') %>
