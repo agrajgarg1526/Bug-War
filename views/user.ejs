@@ -6,6 +6,9 @@
                 <span><button type="submit"
                         class="btn btn-secondary user-btn <%= cls==="profile"? "user-btn-active":"";%>" name="questions"
                         value="profile">
+                        <%if(username===user.username){%>
+                            My
+                        <%}%>
                         Profile
                     </button></span>
                 <span><button type="submit"
@@ -54,8 +57,11 @@
           <div class=" user-stats-div col-md-4">
               <div>
                 
-                <h4>Total Number of Questions 
+                <h4> Number of Questions 
                <br>
+               <%if(username===user.username){%>
+                You
+            <%}%>
                  Asked</h4>
                 <br>
                 <h2 class="user-stats"><%=user.questions.length%></h2>
@@ -64,8 +70,11 @@
           </div>
           <div class="user-stats-div  col-md-4">
             <div>
-                <h4>Total Number of Questions 
-                    <br>
+                <h4> Number of Questions 
+                    <br>`
+                    <%if(username===user.username){%>
+                        You
+                    <%}%>
                      Upvoted</h4>
                      <br>
                 <h2 class="user-stats"><%=user.upvotedQuestions.length%></h2>
@@ -73,8 +82,11 @@
           </div>
           <div class="user-stats-div col-md-4">
             <div>
-                <h4>Total Number of Questions 
+                <h4> Number of Questions 
                     <br>
+                    <%if(username===user.username){%>
+                        You
+                    <%}%>
                      Downvoted</h4>
                      <br>
               <h2 class="user-stats"><%=user.downvotedQuestions.length%></h2>
@@ -82,11 +94,38 @@
           </div>
           <div class="user-stats-div col-md-4">
             <div>
-                <h4>Total Number of Questions 
+                <h4> Number of Questions 
                     <br>
+                    <%if(username===user.username){%>
+                        You
+                    <%}%>
                      Answered</h4>
                      <br>
               <h2 class="user-stats"><%=user.answeredQuestions.length%></h2>
+              </div>
+          </div>
+          <div class="user-stats-div col-md-4">
+            <div>
+                <h4>Upvotes gained by 
+                    <br>
+                    <%if(username===user.username){%>
+                        Your
+                    <%}%>
+                    Questions</h4>
+                     <br>
+              <h2 class="user-stats"><%=goodQuestions%></h2>
+              </div>
+          </div>
+          <div class="user-stats-div col-md-4">
+            <div>
+                <h4>Upvotes gained by 
+                    <br>
+                    <%if(username===user.username){%>
+                        Your
+                    <%}%>
+                    Answers</h4>
+                     <br>
+              <h2 class="user-stats"><%=goodAnswers%></h2>
               </div>
           </div>
         </div>

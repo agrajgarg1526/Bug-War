@@ -346,28 +346,6 @@ app.get("/users/:username", function (req, res) {
         }
 
         let answers = foundUser.answeredQuestions;
-        // console.log(answers);
-
-        // Question.find()
-        //   .where("_id")
-        //   .in(answers)
-        //   .exec((err, records) => {
-        //     console.log(records.length);
-        //     for (let i = 0; i < records.length; i++) {
-        //       for (let j = 0; j < records[i].answers.length; j++) {
-        //         if (
-        //           records[i].answers[j].answeredBy === req.params.username &&
-        //           records[i].answers[j].upvote >= 1
-        //         ) {
-        //           console.log(records[i].answers[j]);
-
-        //           goodAnswers++;
-        //         }
-        //       }
-        //     }
-        //     rating = (goodAnswers * 100) / records.length;
-        //   });
-        // console.log(rating);
 
         Question.find()
           .where("_id")
@@ -375,8 +353,13 @@ app.get("/users/:username", function (req, res) {
           .exec((err, records) => {
             // console.log(records+"\n\n\n");
             let rating,
+              rating1,
+              rating2,
               goodAnswers = 0,
-              totalAnswers = 0;
+              totalAnswers = 0,
+              goodQuestions = 0,
+              totalQuestions = 0;
+            rating1 = 0;
             if (cls === "profile") {
               for (let i = 0; i < records.length; i++) {
                 // console.log(records[i].answers.length);
@@ -386,25 +369,54 @@ app.get("/users/:username", function (req, res) {
                   ) {
                     // console.log(records[i].answers[j]);
                     totalAnswers++;
-                    if (records[i].answers[j].upvote >= 2) goodAnswers++;
+                    if (records[i].answers[j].upvote >= 1) goodAnswers++;
                   }
                 }
               }
-              rating = (goodAnswers * 100) / totalAnswers;
-              if (rating == 0 || totalAnswers==0) rating = 0;
-              else if (rating < 20) rating = 1;
-              else if (rating < 40) rating = 2;
-              else if (rating < 60) rating = 3;
-              else if (rating < 80) rating = 4;
-              else rating = 5;
+              rating1 =
+                totalAnswers === 0 ? 0 : (goodAnswers * 100) / totalAnswers;
             }
-            res.render("user", {
-              user: foundUser,
-              date: helper,
-              cls: cls,
-              arr: records,
-              rating: rating,
-            });
+
+            let questions = foundUser.questions;
+
+            Question.find()
+              .where("_id")
+              .in(questions)
+              .exec((err, records) => {
+                // console.log(records);
+                totalQuestions = records.length;
+                for (let i = 0; i < records.length; i++) {
+                  if (records[i].upvote >= 1) goodQuestions++;
+                }
+
+                rating2 =
+                  totalQuestions === 0
+                    ? 0
+                    : (goodQuestions * 100) / totalQuestions;
+
+                rating = (rating1 + rating2) / 2;
+
+                if (rating == 0) rating = 0;
+                else if (rating < 20) rating = 1;
+                else if (rating < 40) rating = 2;
+                else if (rating < 60) rating = 3;
+                else if (rating < 80) rating = 4;
+                else rating = 5;
+
+                // console.log(rating1);
+                // console.log(rating2);
+                // console.log(rating);
+
+                res.render("user", {
+                  user: foundUser,
+                  date: helper,
+                  cls: cls,
+                  arr: records,
+                  rating: rating,
+                  goodQuestions,goodQuestions,
+                  goodAnswers:goodAnswers
+                });
+              });
           });
       }
     }
