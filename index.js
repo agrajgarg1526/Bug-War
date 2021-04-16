@@ -391,7 +391,7 @@ app.get("/users/:username", function (req, res) {
                 }
               }
               rating = (goodAnswers * 100) / totalAnswers;
-              if (rating == 0) rating = 0;
+              if (rating == 0 || totalAnswers==0) rating = 0;
               else if (rating < 20) rating = 1;
               else if (rating < 40) rating = 2;
               else if (rating < 60) rating = 3;
