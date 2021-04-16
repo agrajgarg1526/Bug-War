@@ -18,7 +18,11 @@ mongoose.connect("mongodb://localhost:27017/Bugwar", {
 const expressSession = require("express-session");
 const MongoStore = require("connect-mongo")(expressSession);
 
-app.use(bodyParser.urlencoded({ extended: true }));
+app.use(
+  bodyParser.urlencoded({
+    extended: true,
+  })
+);
 app.use(express.static("public"));
 
 app.use(
@@ -81,11 +85,17 @@ const quesSchema = new mongoose.Schema({
       upvote: Number,
       upvotedBy: [String],
       downvotedBy: [String],
-      time: { type: Date, default: Date.now },
+      time: {
+        type: Date,
+        default: Date.now,
+      },
     },
   ],
   askedBy: String,
-  time: { type: Date, default: Date.now },
+  time: {
+    type: Date,
+    default: Date.now,
+  },
 });
 
 // quesSchema.plugin(timeZone, { paths: ['date', 'subDocument.subDate'] });
@@ -98,7 +108,12 @@ const UserDetail = new mongoose.Schema({
   questions: [String],
   upvotedQuestions: [String],
   downvotedQuestions: [String],
-  time: { type: Date, default: Date.now },
+  answeredQuestions: [String],
+  answers: [String],
+  time: {
+    type: Date,
+    default: Date.now,
+  },
 });
 
 UserDetail.plugin(findOrCreate);
@@ -145,7 +160,10 @@ passport.use(
         profile.emails[0].value.indexOf("@")
       );
       User.findOrCreate(
-        { username: extractedUser, email: profile.emails[0].value },
+        {
+          username: extractedUser,
+          email: profile.emails[0].value,
+        },
         function (err, user) {
           return cb(err, user);
         }
@@ -156,12 +174,16 @@ passport.use(
 
 app.get(
   "/auth/google",
-  passport.authenticate("google", { scope: ["email", "profile"] })
+  passport.authenticate("google", {
+    scope: ["email", "profile"],
+  })
 );
 
 app.get(
   "/auth/google/bugwar",
-  passport.authenticate("google", { failureRedirect: "/login" }),
+  passport.authenticate("google", {
+    failureRedirect: "/login",
+  }),
   function (req, res) {
     // Successful authentication, redirect home.
     // console.log(req.user.googleId);
@@ -189,7 +211,10 @@ passport.use(
         profile.emails[0].value.indexOf("@")
       );
       User.findOrCreate(
-        { username: extractedUser, email: profile.emails[0].value },
+        {
+          username: extractedUser,
+          email: profile.emails[0].value,
+        },
         function (err, user) {
           return cb(err, user);
         }
@@ -200,12 +225,16 @@ passport.use(
 
 app.get(
   "/auth/facebook",
-  passport.authenticate("facebook", { scope: ["email"] })
+  passport.authenticate("facebook", {
+    scope: ["email"],
+  })
 );
 
 app.get(
   "/auth/facebook/bugwar",
-  passport.authenticate("facebook", { failureRedirect: "/login" }),
+  passport.authenticate("facebook", {
+    failureRedirect: "/login",
+  }),
   function (req, res) {
     // Successful authentication, redirect home.
     // console.log(req.user);
@@ -221,13 +250,18 @@ app.get("/", function (req, res) {
 });
 
 app.get("/login", function (req, res) {
-  res.render("login", { text: "" });
+  res.render("login", {
+    text: "",
+  });
 });
 
 app.post("/login", function (req, res) {
   passport.authenticate("local", function (err, user, info) {
     if (err) console.log(err);
-    if (!user) res.render("login", { text: "Incorrect Password" });
+    if (!user)
+      res.render("login", {
+        text: "Incorrect Password",
+      });
 
     req.logIn(user, function (err) {
       if (err) console.log(err);
@@ -238,44 +272,144 @@ app.post("/login", function (req, res) {
 });
 
 app.get("/signup", function (req, res) {
-  res.render("signup", { text: "" });
+  res.render("signup", {
+    text: "",
+  });
 });
 
 app.post("/signup", function (req, res) {
-  User.findOne({ email: req.body.email }, function (err, foundUser) {
-    if (err || foundUser) {
-      // alert('Email Already Exists');
-      res.render("signup", { text: "Email already exists" });
-    } else {
-      User.register(
-        { username: req.body.username, email: req.body.email },
-        req.body.password,
-        function (err, user) {
-          if (err) {
-            res.render("signup", { text: "Username Already Exists" });
-          }
+  User.findOne(
+    {
+      email: req.body.email,
+    },
+    function (err, foundUser) {
+      if (err || foundUser) {
+        // alert('Email Already Exists');
+        res.render("signup", {
+          text: "Email already exists",
+        });
+      } else {
+        User.register(
+          {
+            username: req.body.username,
+            email: req.body.email,
+          },
+          req.body.password,
+          function (err, user) {
+            if (err) {
+              res.render("signup", {
+                text: "Username Already Exists",
+              });
+            }
 
-          // const username = req.body.username;
-          passport.authenticate("local")(req, res, function () {
-            res.redirect("/");
-          });
-        }
-      );
+            // const username = req.body.username;
+            passport.authenticate("local")(req, res, function () {
+              res.redirect("/");
+            });
+          }
+        );
+      }
     }
-  });
+  );
 });
 
 app.get("/users/:username", function (req, res) {
-  // console.log(req.params);
+  // console.log(req.query);
   // if (req.user) {
   // logged in
-  User.findOne({ username: req.user.username }, function (err, foundUser) {
-    if (err) console.log(err);
-    else {
-      res.render("user", { user: foundUser, date: helper });
+  User.findOne(
+    {
+      username: req.params.username,
+    },
+    function (err, foundUser) {
+      if (err) console.log(err);
+      else {
+        let cls, arr, title;
+        if (
+          req.query.questions === "profile" ||
+          Object.keys(req.query).length === 0
+        ) {
+          cls = "profile";
+          arr = foundUser.answeredQuestions;
+        } else if (req.query.questions === "asked") {
+          cls = "asked";
+          arr = foundUser.questions;
+          // title = "Questions You Asked";
+        } else if (req.query.questions === "upvoted") {
+          cls = "upvoted";
+          arr = foundUser.upvotedQuestions;
+          // title = "Questions You Upvoted";
+        } else if (req.query.questions === "answered") {
+          cls = "answered";
+          arr = foundUser.answeredQuestions;
+          // title = "Questions You Answered";
+        }
+
+        let answers = foundUser.answeredQuestions;
+        // console.log(answers);
+
+        // Question.find()
+        //   .where("_id")
+        //   .in(answers)
+        //   .exec((err, records) => {
+        //     console.log(records.length);
+        //     for (let i = 0; i < records.length; i++) {
+        //       for (let j = 0; j < records[i].answers.length; j++) {
+        //         if (
+        //           records[i].answers[j].answeredBy === req.params.username &&
+        //           records[i].answers[j].upvote >= 1
+        //         ) {
+        //           console.log(records[i].answers[j]);
+
+        //           goodAnswers++;
+        //         }
+        //       }
+        //     }
+        //     rating = (goodAnswers * 100) / records.length;
+        //   });
+        // console.log(rating);
+
+        Question.find()
+          .where("_id")
+          .in(arr)
+          .exec((err, records) => {
+            // console.log(records+"\n\n\n");
+            let rating,
+              goodAnswers = 0,
+              totalAnswers = 0;
+            if (cls === "profile") {
+              for (let i = 0; i < records.length; i++) {
+                // console.log(records[i].answers.length);
+                for (let j = 0; j < records[i].answers.length; j++) {
+                  if (
+                    records[i].answers[j].answeredBy === req.params.username
+                  ) {
+                    // console.log(records[i].answers[j]);
+                    totalAnswers++;
+                    if (records[i].answers[j].upvote >= 2) goodAnswers++;
+                  }
+                }
+              }
+              rating = (goodAnswers * 100) / totalAnswers;
+              if (rating == 0) rating = 0;
+              else if (rating < 20) rating = 1;
+              else if (rating < 40) rating = 2;
+              else if (rating < 60) rating = 3;
+              else if (rating < 80) rating = 4;
+              else rating = 5;
+            }
+            res.render("user", {
+              user: foundUser,
+              date: helper,
+              cls: cls,
+              arr: records,
+              rating: rating,
+            });
+          });
+      }
     }
-  });
- 
+  );
+
   // } else {
   // not logged in
   // res.render("login");
@@ -316,19 +450,26 @@ app.post("/ask", function (req, res) {
   });
   question.save();
 
-  User.findOne({ username: req.user.username }, function (err, foundUser) {
-    if (err) console.log(err);
-    else {
-      //  console.log(foundUser);
-      Question.findOne(
-        { title: req.body.askTitle },
-        function (err, foundQuestion) {
-          foundUser.questions.push(foundQuestion.id);
-          foundUser.save();
-        }
-      );
+  User.findOne(
+    {
+      username: req.user.username,
+    },
+    function (err, foundUser) {
+      if (err) console.log(err);
+      else {
+        //  console.log(foundUser);
+        Question.findOne(
+          {
+            title: req.body.askTitle,
+          },
+          function (err, foundQuestion) {
+            foundUser.questions.push(foundQuestion.id);
+            foundUser.save();
+          }
+        );
+      }
     }
-  });
+  );
 
   const link = "/questions/" + question.id;
   res.redirect(link);
@@ -351,52 +492,71 @@ app.get("/questions/:questionID", function (req, res) {
 });
 
 app.post("/vote", function (req, res) {
-  User.findOne({ username: req.user.username }, function (err, foundUser) {
-    if (err) console.log(err);
-    else {
-      if (req.body.value == "up") {
-        var ifInDown = foundUser.downvotedQuestions.findIndex(function (item) {
-          return item === req.body.id;
-        });
-        if (ifInDown === -1) {
-          var index = foundUser.upvotedQuestions.findIndex(function (item) {
+  User.findOne(
+    {
+      username: req.user.username,
+    },
+    function (err, foundUser) {
+      if (err) console.log(err);
+      else {
+        if (req.body.value == "up") {
+          var ifInDown = foundUser.downvotedQuestions.findIndex(function (
+            item
+          ) {
             return item === req.body.id;
           });
-          if (index === -1) {
-            Question.findOneAndUpdate(
-              { _id: req.body.id },
-              { $inc: { upvote: 1 } },
-              (err, response) => {
-                // console.log(response);
-              }
-            );
-            foundUser.upvotedQuestions.push(req.body.id);
-            foundUser.save();
+          if (ifInDown === -1) {
+            var index = foundUser.upvotedQuestions.findIndex(function (item) {
+              return item === req.body.id;
+            });
+            if (index === -1) {
+              Question.findOneAndUpdate(
+                {
+                  _id: req.body.id,
+                },
+                {
+                  $inc: {
+                    upvote: 1,
+                  },
+                },
+                (err, response) => {
+                  // console.log(response);
+                }
+              );
+              foundUser.upvotedQuestions.push(req.body.id);
+              foundUser.save();
+            }
           }
-        }
-      } else if (req.body.value == "down") {
-        var ifInUp = foundUser.upvotedQuestions.findIndex(function (item) {
-          return item === req.body.id;
-        });
-        if (ifInUp === -1) {
-          var index = foundUser.downvotedQuestions.findIndex(function (item) {
+        } else if (req.body.value == "down") {
+          var ifInUp = foundUser.upvotedQuestions.findIndex(function (item) {
             return item === req.body.id;
           });
-          if (index === -1) {
-            Question.findOneAndUpdate(
-              { _id: req.body.id },
-              { $inc: { upvote: -1 } },
-              (err, response) => {
-                // console.log(response);
-              }
-            );
-            foundUser.downvotedQuestions.push(req.body.id);
-            foundUser.save();
+          if (ifInUp === -1) {
+            var index = foundUser.downvotedQuestions.findIndex(function (item) {
+              return item === req.body.id;
+            });
+            if (index === -1) {
+              Question.findOneAndUpdate(
+                {
+                  _id: req.body.id,
+                },
+                {
+                  $inc: {
+                    upvote: -1,
+                  },
+                },
+                (err, response) => {
+                  // console.log(response);
+                }
+              );
+              foundUser.downvotedQuestions.push(req.body.id);
+              foundUser.save();
+            }
           }
         }
       }
     }
-  });
+  );
   const link = "/questions/" + req.body.id;
   res.redirect(link);
 });
@@ -404,7 +564,7 @@ app.post("/vote", function (req, res) {
 app.post("/answer/:questionID", function (req, res) {
   // console.log(req.body);
   // git log
-  // console.log(req.params.questionID);
+  let id = req.params.questionID;
   Question.findById(req.params.questionID, function (err, foundQuestion) {
     if (err) console.log(err);
     else {
@@ -414,7 +574,25 @@ app.post("/answer/:questionID", function (req, res) {
         upvote: 0,
       };
       foundQuestion.answers.push(ans);
+      let answerID = foundQuestion.answers[foundQuestion.answers.length - 1].id;
       foundQuestion.save();
+
+      User.findOne(
+        {
+          username: req.user.username,
+        },
+        function (err, foundUser) {
+          if (err) console.log(err);
+          else {
+            if (!foundUser.answeredQuestions.includes(id))
+              foundUser.answeredQuestions.push(id);
+
+            foundUser.answers.push(answerID);
+            foundUser.save();
+          }
+        }
+      );
+
       const link = "/questions/" + req.params.questionID;
       res.redirect(link);
 
@@ -440,7 +618,9 @@ app.get("/list", function (req, res) {
             query: req.query.sort,
           });
         }
-      }).sort({ upvote: "asc" });
+      }).sort({
+        upvote: "asc",
+      });
     } else if (req.query.sort == "dec") {
       Question.find(function (err, foundQuestions) {
         if (err) console.log(err);
@@ -452,7 +632,9 @@ app.get("/list", function (req, res) {
             query: req.query.sort,
           });
         }
-      }).sort({ upvote: "desc" });
+      }).sort({
+        upvote: "desc",
+      });
     } else if (req.query.sort == "time" || !req.query.sort) {
       Question.find(function (err, foundQuestions) {
         if (err) console.log(err);
@@ -464,7 +646,9 @@ app.get("/list", function (req, res) {
             query: req.query.sort,
           });
         }
-      }).sort({ time: -1 });
+      }).sort({
+        time: -1,
+      });
     }
   } else {
     // not logged in

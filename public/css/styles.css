@@ -275,3 +275,59 @@ body {
   position: relative;
   right: 120px;
 }
+
+
+/*Profile*/
+
+.user{
+  padding: 80px 80px;
+}
+
+.user-username{
+  color: #ce1212;
+}
+.user-properties{
+  border: 1px solid black;
+  padding: 70px 70px;
+  margin-bottom: 75px;
+}
+
+.user-email{
+  font-size: 1.3rem;
+  margin: 40px 0px;
+}
+
+.user-time{
+  font-size: 1.3rem;
+  color:#6e7c7c;
+  margin: 40px 0px;
+}
+.user-btn{
+  background-color: #f6f5f5; 
+  color: black;
+  border: none;
+}
+
+.user-btn-active{
+   background-color: #6c757d;
+   color: white;
+}
+
+i{
+  margin-right: 10px;
+  margin-left: 10px;
+}
+
+.user-questions-div{
+    width: 80%;
+    margin:10px 30px 10px 30px;
+}
+
+.user-stats-div{
+  text-align: center;
+  margin: 30px 0;
+}
+
+.user-stats{
+  color:#6e7c7c;
+}
