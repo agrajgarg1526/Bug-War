@@ -9,7 +9,7 @@ const mongoose = require("mongoose");
 const passportLocalMongoose = require("passport-local-mongoose");
 var findOrCreate = require("mongoose-findorcreate");
 
-mongoose.connect("mongodb://localhost:27017/Bugwar", {
+mongoose.connect(process.env.DB_MONGO_URL, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
   useFindAndModify: false,
