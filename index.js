@@ -352,13 +352,13 @@ app.get("/users/:username", function (req, res) {
           .in(arr)
           .exec((err, records) => {
             // console.log(records+"\n\n\n");
-            let rating,
-              rating1,
-              rating2,
-              goodAnswers = 0,
-              totalAnswers = 0,
-              goodQuestions = 0,
-              totalQuestions = 0;
+            let rating = 0,
+              rating1 = 0;
+            (rating2 = 0),
+              (goodAnswers = 0),
+              (totalAnswers = 0),
+              (goodQuestions = 0),
+              (totalQuestions = 0);
             rating1 = 0;
             if (cls === "profile") {
               for (let i = 0; i < records.length; i++) {
@@ -376,7 +376,6 @@ app.get("/users/:username", function (req, res) {
               rating1 =
                 totalAnswers === 0 ? 0 : (goodAnswers * 100) / totalAnswers;
             }
-
             let questions = foundUser.questions;
 
             Question.find()
@@ -403,20 +402,20 @@ app.get("/users/:username", function (req, res) {
                 else if (rating < 80) rating = 4;
                 else rating = 5;
 
-                // console.log(rating1);
-                // console.log(rating2);
-                // console.log(rating);
-
-                res.render("user", {
-                  user: foundUser,
-                  date: helper,
-                  cls: cls,
-                  arr: records,
-                  rating: rating,
-                  goodQuestions,goodQuestions,
-                  goodAnswers:goodAnswers
-                });
+                console.log(rating1);
+                console.log(rating2);
+                console.log(rating);
               });
+            res.render("user", {
+              user: foundUser,
+              date: helper,
+              cls: cls,
+              arr: records,
+              rating: rating,
+              goodQuestions,
+              goodQuestions,
+              goodAnswers: goodAnswers,
+            });
           });
       }
     }
