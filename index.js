@@ -353,13 +353,15 @@ app.get("/users/:username", function (req, res) {
           .exec((err, records) => {
             // console.log(records+"\n\n\n");
             let rating = 0,
-              rating1 = 0;
-            (rating2 = 0),
-              (goodAnswers = 0),
-              (totalAnswers = 0),
-              (goodQuestions = 0),
-              (totalQuestions = 0);
-            rating1 = 0;
+              rating1 = 0,
+            rating2 = 0,
+              goodAnswers = 0,
+              totalAnswers = 0,
+              goodQuestions = 0,
+              totalQuestions = 0,
+              upvoteQuestions=0,
+              upvoteAnswers=0;
+
             if (cls === "profile") {
               for (let i = 0; i < records.length; i++) {
                 // console.log(records[i].answers.length);
@@ -370,6 +372,7 @@ app.get("/users/:username", function (req, res) {
                     // console.log(records[i].answers[j]);
                     totalAnswers++;
                     if (records[i].answers[j].upvote >= 1) goodAnswers++;
+                    upvoteAnswers+=records[i].answers[j].upvote;
                   }
                 }
               }
@@ -386,6 +389,7 @@ app.get("/users/:username", function (req, res) {
                 totalQuestions = records.length;
                 for (let i = 0; i < records.length; i++) {
                   if (records[i].upvote >= 1) goodQuestions++;
+                  upvoteQuestions+=records[i].upvote;
                 }
 
                 rating2 =
@@ -402,20 +406,24 @@ app.get("/users/:username", function (req, res) {
                 else if (rating < 80) rating = 4;
                 else rating = 5;
 
-                console.log(rating1);
-                console.log(rating2);
+                // console.log(rating1);
+                // console.log(rating2);
                 console.log(rating);
+                // console.log(totalAnswers);
+                // console.log(goodAnswers);
+                // console.log(totalQuestions);
+                // console.log(goodQuestions);
+                res.render("user", {
+                  user: foundUser,
+                  date: helper,
+                  cls: cls,
+                  arr: records,
+                  rating: rating,
+                  upvoteQuestions:upvoteQuestions,
+                  upvoteAnswers: upvoteAnswers,
+                });
               });
-            res.render("user", {
-              user: foundUser,
-              date: helper,
-              cls: cls,
-              arr: records,
-              rating: rating,
-              goodQuestions,
-              goodQuestions,
-              goodAnswers: goodAnswers,
-            });
+            
           });
       }
     }
