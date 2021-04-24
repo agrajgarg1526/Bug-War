@@ -1,25 +1,25 @@
 <%- include('partials/header') %>
 
-<div class="home-block">
-  <!-- <div class="first">
-    <img src="images/real.jpeg" alt="">
-  </div> -->
-  <div class="btn-div">
-    <button
-      type="button"
-      class="btn btn-outline-dark home-btn"
-      onclick="window.location='/ask';"
-    >
-      Post A Question
-    </button>
-    <button
-      type="button"
-      class="btn btn-outline-dark home-btn"
-      onclick="window.location='/list';"
-    >
-      Answer a question
-    </button>
-    </div>
+<div class="home-block"> 
+  <div class="main-div">
+    <div class="btn-div">
+      <button
+        type="button"
+        class="btn btn-outline-dark home-btn post"
+        onclick="window.location='/ask';"
+      >
+        Post A Question
+      </button>
+      <button
+        type="button"
+        class="btn btn-outline-dark home-btn answer"
+        onclick="window.location='/list';"
+      >
+        Answer a question
+      </button>
+      </div>
+  </div>
+ 
     <div class="btn-div">
       <button type="submit" class="btn btn-outline-dark home-btn for">
         Forums
@@ -29,6 +29,7 @@
       Community
     </button>
   </div>
+
 </div>
 
 <%- include('partials/footer') %>

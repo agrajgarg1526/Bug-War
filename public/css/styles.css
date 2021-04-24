@@ -1,5 +1,8 @@
 @import url("https://fonts.googleapis.com/css2?family=Poppins&display=swap");
-
+@import url("https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Roboto:wght@300&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Playfair+Display&display=swap");
 body {
   background-color: #f6f5f5;
   font-family: "Poppins", sans-serif;
@@ -13,6 +16,7 @@ html {
 
 .navbar {
   padding: 0.5% 6%;
+  font-family: "Roboto", sans-serif;
   /* position:fixed; */
 }
 
@@ -53,14 +57,16 @@ html {
   text-align: center;
 }
 .home-btn {
-  font-size: 1.2em;
+  font-size: 1.5em;
+  font-weight: 600;
   height: 5em;
   width: 10em;
   margin: 3% 1%;
   border-radius: 20px;
-  background-color: #e6e6e6;
+  background-color: #f4eee8;
   box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
   border: none;
+  background: linear-gradient(#e3e3e4, #a6a7a4);
 }
 
 /* LOGIN PAGE*/
@@ -681,28 +687,28 @@ a,
     margin-left: -30px;
   }
 
-  .question-h1{
+  .question-h1 {
     font-size: 1.6rem;
   }
 
-  .question-p{
+  .question-p {
     font-size: 1rem;
   }
-  
-  .answerthis .btn, .userpost{
-  font-size: 0.8rem;
-  width: 110px;
+
+  .answerthis .btn,
+  .userpost {
+    font-size: 0.8rem;
+    width: 110px;
   }
 }
 
-@media(max-width:1000px){
+@media (max-width: 1000px) {
   .question-div {
     margin: 55px 210px 0 140px;
   }
 }
 
-
-@media(max-width:900px){
+@media (max-width: 900px) {
   .question-div {
     margin: 55px 180px 0 120px;
   }
@@ -821,4 +827,36 @@ a,
     margin: 145px 16px 0px 55px;
   }
 }
+
+@media (min-width: 480px) {
+  .home-block {
+    font-family: "Roboto", sans-serif;
+    background-image: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.7)),
+      url("https://cdn2.hubspot.net/hubfs/202339/canvas/images/parallax/Website-Design-Background.png");
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
+    min-height: 100vh;
+  }
+
+  .post{
+    border-radius: 0;
+    border-top-left-radius:15px;
+    width: 300px;
+    margin: -120px 0 0 -50px;
+  }
+
+  .answer{
+    border-radius: 0;
+    border-bottom-right-radius:15px;
+    width: 300px;
+    margin: 118px 0 0 27px;
+  }
+}
+/* 
+@media (max-width: 768px) {
+  /* .photo-div {
+    display: none;
+  } */
+} */
 
