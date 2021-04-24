@@ -1,8 +1,11 @@
 function date(diff) {
+  
   diff = Date.now() - diff;
+  
   var months = Math.floor(diff / 1000 / 60 / (60 * 24 * 31));
+ 
   var days = Math.floor(diff / 1000 / 60 / (60 * 24));
-
+  console.log(days);
   var msec = diff;
   var hours = Math.floor(msec / 1000 / 60 / 60);
   msec -= hours * 1000 * 60 * 60;
@@ -18,13 +21,13 @@ function date(diff) {
     } else return months + " months ago";
   } else if (days > 0) {
     if (days == 1) return days + " day ago";
-    else if (days > 31) return (days % 31) + " months ago";
+    else return days + " days ago";
   } else {
     if (hours > 0) {
       if (hours == 1) return hours + " hour ago";
       else return hours + " hours ago";
-    } else {
-      if (minutes == 1) minutes + " minute ago";
+    } else {if(minutes==0) return "";
+      else if (minutes == 1) return minutes + " minute ago";
       else return minutes + " minutes ago";
     }
   }

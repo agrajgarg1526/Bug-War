@@ -49,7 +49,7 @@
   <div class="btn-group-answer">
 
     <form action="/questions/<%=question.id%>" method="GET">
-      <button style="width: 16em; text-size-adjust: 40% ;" type="button"
+      <button type="button"
         class="btn btn-secondary dropdown-toggle btn-sm" data-toggle="dropdown" aria-haspopup="true"
         aria-expanded="false">
 
@@ -78,10 +78,6 @@
     </form>
 
   </div>
-
-  
-  
-
         <%for(let i=0;i<question.answers.length;i++){%>
         <hr>
 
@@ -111,14 +107,14 @@
           </form>
 
         </div>
-
-        <p><%-question.answers[i].answer%></p>
-
+       <div class="answer-p">
+        <p ><%-question.answers[i].answer%></p>
+      </div>
         <div class="answeredBy">
-          <%let link=username===question.answers[i].answeredBy?"You":question.answers[i].answeredBy;%>
+          <p><%let link=username===question.answers[i].answeredBy?"You":question.answers[i].answeredBy;%>
           answered By :
           <a class="ask-user" href="/users/<%=question.answers[i].  answeredBy%>"><%=link%></a>
-          <%= date.date(question.answers[i].time)%>
+          <%= date.date(question.answers[i].time)%></p>
         </div>
         <br>
         <br>
@@ -130,7 +126,7 @@
 <form id="ask-answer" class="ask-answer" action="/answer/<%=question.id%>" method="POST">
         <div class="mb-3">
           <label for="askAnswer" class="form-label">
-            <h4>Your Answer</h4>
+            <h4 class="your-answer">Your Answer</h4>
           </label>
           <textarea class="form-control" id="askTextArea" name="askAnswer" rows="14"></textarea>
         </div>

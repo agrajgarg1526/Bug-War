@@ -8,19 +8,20 @@
 
 <div class="btn-group-question">
     <form action="list" method="GET">
-        <button style="width: 16em; text-size-adjust: 40% ;" type="button" class="btn btn-secondary dropdown-toggle btn-sm" data-toggle="dropdown"
-            aria-haspopup="true" aria-expanded="false">
+        <button type="button"
+            class="btn btn-secondary dropdown-toggle btn-sm" data-toggle="dropdown" aria-haspopup="true"
+            aria-expanded="false">
             <%if(query=="asc"){%>
-                Sort by : Upvotes: Low to High
+            Sort by : Upvotes: Low to High
             <%}%>
             <%if(query=="dec"){%>
-                Sort by : Upvotes: High to Low
+            Sort by : Upvotes: High to Low
             <%}%> 
             <%if(query=="time"){%>
-                Sort by : Recently Asked
+            Sort by : Recently Asked
             <%}%> 
             <%if(!query){%>
-                Sort by : Select
+            Sort by : Select
             <%}%>
             
         </button>
@@ -39,39 +40,38 @@
 
 <div class="list-div">
     <%for(let i=0;i<foundQuestions.length;i++){%>
-    <hr>
+        <div class="list-div-div">
+           
+          
+            <p> <a class="list-a container" href="/questions/<%=foundQuestions[i].id%>"><%=foundQuestions[i].title%></a>
+            </p>
 
-    <p>
+           
+            <a class="upvote-a " href="/questions/<%=foundQuestions[i].id%>">
+                <div class="list-upvote-div">
+                    Upvotes
+                    <br>
+                    <%=foundQuestions[i].upvote%>
 
-        <a class="list-a" href="/questions/<%=foundQuestions[i].id%>"><%=foundQuestions[i].title%></a>
+                </div>
+                <div class="list-upvote-div">
+                    Answers
+                    <br>
+                    <%=foundQuestions[i].answers.length%>
+                </div>
+            </a>
 
-        <a class="upvote-a" href="/questions/<%=foundQuestions[i].id%>">
-            <div class="list-upvote-div">
-                Upvotes
-                <br>
-                <%=foundQuestions[i].upvote%>
+            <div class="list-upvote-div askedby">
 
+                <%let link=username===foundQuestions[i].askedBy?"You":foundQuestions[i].askedBy;%>
+                asked By :
+                <a class="ask-user" href="/users/<%=foundQuestions[i].askedBy%>"><%=link%></a>
+                <%= date.date(foundQuestions[i].time)%>
             </div>
-            <div class="list-upvote-div">
-                Answers
-                <br>
-                <%=foundQuestions[i].answers.length%>
-            </div>
-
-            
-        </a>
-
-        <div class="list-upvote-div askedby">
-
-            <%let link=username===foundQuestions[i].askedBy?"You":foundQuestions[i].askedBy;%>
-            asked By :
-            <a class="ask-user" href="/users/<%=foundQuestions[i].askedBy%>"><%=link%></a>
-            <%= date.date(foundQuestions[i].time)%>
+            <hr class=list-ques-hr>
         </div>
-    </p>
+            <%}%>
 
-    <%}%>
-<hr>
 
 </div>
 <%- include('partials/footer') %>

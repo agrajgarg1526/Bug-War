@@ -7,7 +7,7 @@
                         class="btn btn-secondary user-btn <%= cls==="profile"? "user-btn-active":"";%>" name="questions"
                         value="profile">
                         <%if(username===user.username){%>
-                            My
+                        My
                         <%}%>
                         Profile
                     </button></span>
@@ -36,114 +36,112 @@
         <p class="user-email"><i class="fas fa-envelope"></i> <%=user.email%></p>
 
         <p class="user-time">
-            <i class="fas fa-user"></i> User since <%=
-    date.date(user.time).slice(0,date.date(user.time).length-3)%>
+            <i class="fas fa-user"></i> User since 
+            <%=date.date(user.time).slice(0,date.date(user.time).length-3)%>
         </p>
         <p class="user-time">
             <i class="far fa-lightbulb"></i>
-            Rating :  
+            Rating :
             <%if(rating===0){%>
-                &nbsp;&nbsp; -
+            &nbsp;&nbsp; -
             <%} else{%>
-              <%for(let i=0;i<rating;i++){%>
-                <i class="fas fa-star"></i>
-              <%}%>
+            <%for(let i=0;i<rating;i++){%>
+            <i class="fas fa-star"></i>
+            <%}%>
             <%}%>
         </p>
     </div>
 
     <div class="container">
         <div class="row">
-          <div class=" user-stats-div col-md-4">
-              <div>
-                
-                <h4> Number of Questions 
-               <br>
-               <%if(username===user.username){%>
-                You
-            <%}%>
+            <div class=" user-stats-div col-lg-4 col-md-6">
+                <div>
+
+                    <h4> Number of Questions
+                        <br>
+                        <%if(username===user.username){%>
+                        You
+                        <%}%>
                  Asked</h4>
                 <br>
                 <h2 class="user-stats"><%=user.questions.length%></h2>
-              </div>
-            
-          </div>
-          <div class="user-stats-div  col-md-4">
-            <div>
-                <h4> Number of Questions 
-                    <br>`
-                    <%if(username===user.username){%>
+                </div>
+
+            </div>
+            <div class="user-stats-div col-lg-4 col-md-6">
+                <div>
+                    <h4> Number of Questions
+                        <br>`
+                        <%if(username===user.username){%>
                         You
-                    <%}%>
+                        <%}%>
                      Upvoted</h4>
                      <br>
                 <h2 class="user-stats"><%=user.upvotedQuestions.length%></h2>
-              </div>
-          </div>
-          <div class="user-stats-div col-md-4">
-            <div>
-                <h4> Number of Questions 
-                    <br>
-                    <%if(username===user.username){%>
+                </div>
+            </div>
+            <div class="user-stats-div col-lg-4 col-md-6">
+                <div>
+                    <h4> Number of Questions
+                        <br>
+                        <%if(username===user.username){%>
                         You
-                    <%}%>
+                        <%}%>
                      Downvoted</h4>
                      <br>
               <h2 class="user-stats"><%=user.downvotedQuestions.length%></h2>
-              </div>
-          </div>
-          <div class="user-stats-div col-md-4">
-            <div>
-                <h4> Number of Questions 
-                    <br>
-                    <%if(username===user.username){%>
+                </div>
+            </div>
+            <div class="user-stats-div col-lg-4 col-md-6">
+                <div>
+                    <h4> Number of Questions
+                        <br>
+                        <%if(username===user.username){%>
                         You
-                    <%}%>
+                        <%}%>
                      Answered</h4>
                      <br>
               <h2 class="user-stats"><%=user.answeredQuestions.length%></h2>
-              </div>
-          </div>
-          <div class="user-stats-div col-md-4">
-            <div>
-                <h4>Upvotes gained by 
-                    <br>
-                    <%if(username===user.username){%>
+                </div>
+            </div>
+            <div class="user-stats-div col-lg-4 col-md-6">
+                <div>
+                    <h4>Upvotes gained by
+                        <br>
+                        <%if(username===user.username){%>
                         Your
-                    <%}%>
+                        <%}%>
                     Questions</h4>
                      <br>
               <h2 class="user-stats"><%=upvoteQuestions%></h2>
-              </div>
-          </div>
-          <div class="user-stats-div col-md-4">
-            <div>
-                <h4>Upvotes gained by 
-                    <br>
-                    <%if(username===user.username){%>
+                </div>
+            </div>
+            <div class="user-stats-div col-lg-4 col-md-6">
+                <div>
+                    <h4>Upvotes gained by
+                        <br>
+                        <%if(username===user.username){%>
                         Your
-                    <%}%>
+                        <%}%>
                     Answers</h4>
                      <br>
               <h2 class="user-stats"><%=upvoteAnswers%></h2>
-              </div>
-          </div>
+                </div>
+            </div>
         </div>
-      </div>
+    </div>
 
     <%} else{%>
 
     <div class="user-questions-div">
 
         <%if(arr.length===0){%>
-            <p style="padding-top: 50px;padding-left:100px;color:#6e7c7c;;">No Questions <%=cls%></p>
+        <p style="padding-top: 50px;padding-left:100px;color:#6e7c7c;;">No Questions <%=cls%></p>
         <%}%>
         <%for(let i=0;i<arr.length;i++){%>
-        <hr>
+            <div class="user-questions-div-div">
 
-        <p>
-
-            <a class="list-a" href="/questions/<%=arr[i].id%>"><%=arr[i].title%></a>
+            <p><a class="list-a" href="/questions/<%=arr[i].id%>"><%=arr[i].title%></a></p>
 
             <a class="upvote-a" href="/questions/<%=arr[i].id%>">
                 <div class="list-upvote-div">
@@ -171,11 +169,14 @@
                 <a class="ask-user" href="/users/<%=arr[i].askedBy%>"><%=link%></a>
                 <%= date.date(arr[i].time)%>
             </div>
+        
             <%}%>
-    </p>
+            <hr class="user-ques-hr">
+
+        </div>
 
     <%}%>
-            
+
             <%}%>
 </div>
 

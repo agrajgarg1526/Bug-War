@@ -324,7 +324,9 @@ app.get("/users/:username", function (req, res) {
     function (err, foundUser) {
       if (err) console.log(err);
       else {
-        let cls, arr, title;
+        let cls,
+          arr,
+          title;
         if (
           req.query.questions === "profile" ||
           Object.keys(req.query).length === 0
@@ -354,13 +356,13 @@ app.get("/users/:username", function (req, res) {
             // console.log(records+"\n\n\n");
             let rating = 0,
               rating1 = 0,
-            rating2 = 0,
+              rating2 = 0,
               goodAnswers = 0,
               totalAnswers = 0,
               goodQuestions = 0,
               totalQuestions = 0,
-              upvoteQuestions=0,
-              upvoteAnswers=0;
+              upvoteQuestions = 0,
+              upvoteAnswers = 0;
 
             if (cls === "profile") {
               for (let i = 0; i < records.length; i++) {
@@ -372,58 +374,67 @@ app.get("/users/:username", function (req, res) {
                     // console.log(records[i].answers[j]);
                     totalAnswers++;
                     if (records[i].answers[j].upvote >= 1) goodAnswers++;
-                    upvoteAnswers+=records[i].answers[j].upvote;
+                    upvoteAnswers += records[i].answers[j].upvote;
                   }
                 }
               }
               rating1 =
                 totalAnswers === 0 ? 0 : (goodAnswers * 100) / totalAnswers;
-            }
-            let questions = foundUser.questions;
+            
+              let questions = foundUser.questions;
 
-            Question.find()
-              .where("_id")
-              .in(questions)
-              .exec((err, records) => {
-                // console.log(records);
-                totalQuestions = records.length;
-                for (let i = 0; i < records.length; i++) {
-                  if (records[i].upvote >= 1) goodQuestions++;
-                  upvoteQuestions+=records[i].upvote;
-                }
+              Question.find()
+                .where("_id")
+                .in(questions)
+                .exec((err, records) => {
+                  // console.log(records);
+                  totalQuestions = records.length;
+                  for (let i = 0; i < records.length; i++) {
+                    if (records[i].upvote >= 1) goodQuestions++;
+                    upvoteQuestions += records[i].upvote;
+                  }
 
-                rating2 =
-                  totalQuestions === 0
-                    ? 0
-                    : (goodQuestions * 100) / totalQuestions;
+                  rating2 =
+                    totalQuestions === 0
+                      ? 0
+                      : (goodQuestions * 100) / totalQuestions;
 
-                rating = (rating1 + rating2) / 2;
+                  rating = (rating1 + rating2) / 2;
 
-                if (rating == 0) rating = 0;
-                else if (rating < 20) rating = 1;
-                else if (rating < 40) rating = 2;
-                else if (rating < 60) rating = 3;
-                else if (rating < 80) rating = 4;
-                else rating = 5;
+                  if (rating == 0) rating = 0;
+                  else if (rating < 20) rating = 1;
+                  else if (rating < 40) rating = 2;
+                  else if (rating < 60) rating = 3;
+                  else if (rating < 80) rating = 4;
+                  else rating = 5;
 
-                // console.log(rating1);
-                // console.log(rating2);
-                console.log(rating);
-                // console.log(totalAnswers);
-                // console.log(goodAnswers);
-                // console.log(totalQuestions);
-                // console.log(goodQuestions);
+                  // console.log(rating1);
+                  // console.log(rating2);
+                  // console.log(rating);
+                  // console.log(totalAnswers);
+                  // console.log(goodAnswers);
+                  // console.log(totalQuestions);
+                  // console.log(goodQuestions);
+                  res.render("user", {
+                    user: foundUser,
+                    date: helper,
+                    cls: cls,
+                    arr: records,
+                    rating: rating,
+                    upvoteQuestions: upvoteQuestions,
+                    upvoteAnswers: upvoteAnswers,
+                  });
+                });
+            
+              }
+              else{
                 res.render("user", {
                   user: foundUser,
                   date: helper,
                   cls: cls,
                   arr: records,
-                  rating: rating,
-                  upvoteQuestions:upvoteQuestions,
-                  upvoteAnswers: upvoteAnswers,
                 });
-              });
-            
+              }
           });
       }
     }
