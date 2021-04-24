@@ -50,7 +50,7 @@ html {
 .home-block {
   height: 100vh;
 
-  padding: 10% 30% 5% 30%;
+  padding: 152px 63px 64px 66px;
 }
 
 .btn-div {
@@ -351,38 +351,29 @@ i {
   color: #6e7c7c;
 }
 
-@media (max-width: 460px) {
-  .home-block {
-    min-height: 100vh;
-    margin: 50px auto;
-    padding: 0 !important;
+
+@media(max-width:768px){
+  .btn-div{
+    padding: 84px 0 0 0;
   }
 }
 
-@media (max-width: 460px) and (min-width: 403px) {
-  .home-block {
-    min-height: 100vh;
-    margin: 50px auto;
-    padding: 50px !important;
-  }
-}
 
-@media (max-width: 768px) {
-  .home-btn {
-    font-size: 1.2em;
-    height: 3em;
-    width: 12em;
-    margin: 3% 1%;
-    border-radius: 20px;
-    background-color: #e6e6e6;
-    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
-    border: none;
-  }
-
+@media (max-width: 480px) {
   .home-block .btn {
+    box-shadow: rgb(0 0 0) 0px 0px 7px;
     margin-top: 50px !important;
+    border-radius: 35px;
+    height: 6rem;
+    width: 12em;
+    border: none; 
+  }
+
+  .btn-div{
+    padding: 0 0 0 0;
   }
 }
+
 
 .for,
 .com {
