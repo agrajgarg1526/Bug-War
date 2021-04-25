@@ -55,6 +55,7 @@
 
         <div class="user-properties-2">
             <img src="/uploads/images/<%= user.image %> " alt="">
+            <%if(username===user.username){%>
             <form action="/users/<%=username%>/imageUpload" method="POST" role="form"
                 enctype="multipart/form-data">
                 <input type="file" 
@@ -62,6 +63,7 @@
                 <br>
                 <button type="submit">Upload</button>
             </form>
+            <% } %> 
         </div>
     </div>
     <div class="container">
