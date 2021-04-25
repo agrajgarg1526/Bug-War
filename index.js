@@ -54,9 +54,9 @@ app.use(function (req, res, next) {
   res.locals.isAuthenticated = req.isAuthenticated();
 
   if (req.user) {
-    res.locals.pic = req.user.image;
     res.locals.username = req.user.username;
     res.locals.link = "/users/" + req.user.username;
+    res.locals.pic = req.user.image;
     res.locals.tiny_api =
       "https://cdn.tiny.cloud/1/" +
       process.env.DB_TINY_API_KEY +
@@ -249,6 +249,7 @@ app.get(
 
 app.get("/", function (req, res) {
   // console.log(res.locals);
+
   res.render("index");
 });
 
@@ -804,7 +805,6 @@ app.post(
         function (err, foundUser) {
           if (err) console.log(err);
           else {
-            // console.log(req.file);
             foundUser.image = req.file.filename;
             foundUser.save();
           }
