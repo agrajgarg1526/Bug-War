@@ -57,10 +57,8 @@ app.use(function (req, res, next) {
     res.locals.username = req.user.username;
     res.locals.link = "/users/" + req.user.username;
     res.locals.pic = req.user.image;
-    res.locals.tiny_api =
-      "https://cdn.tiny.cloud/1/" +
-      process.env.DB_TINY_API_KEY +
-      "/tinymce/5/tinymce.min.js";
+    res.locals.tiny_api = process.env.DB_TINY_API_KEY;
+
     // console.log(res.locals.tiny_api);
   }
 
