@@ -31,37 +31,42 @@
     </div>
     <%if(cls=="profile"){%>
     <div class="user-properties">
-        <h1 class="user-username"><%=user.username%></h1>
-
-        <p class="user-email"><i class="fas fa-envelope"></i> <%=user.email%></p>
-
-        <p class="user-time">
+        
+        <div class="user-properties-1">
+            <h1 class="user-username"><%=user.username%></h1>
+            <p class="user-email"><i class="fas fa-envelope"></i> <%=user.email%></p>
+            <p class="user-time">
             <i class="fas fa-user"></i> User since 
             <%=date.date(user.time).slice(0,date.date(user.time).length-3)%>
-        </p>
-        <p class="user-time">
-            <i class="far fa-lightbulb"></i>
-            Rating :
-            <%if(rating===0){%>
-            &nbsp;&nbsp; -
-            <%} else{%>
-            <%for(let i=0;i<rating;i++){%>
-            <i class="fas fa-star"></i>
-            <%}%>
-            <%}%>
-        </p>
-        <img src="/uploads/iamges" alt="">
-        <form action="/users/<%=username%>/imageUpload" method="POST" role="form" enctype="multipart/form-data">
-            <input type="file" class="form-control-file" name="image">
-            <button type="submit">Upload</button>
-        </form>
-    </div>
+            </p>
+            <p class="user-time">
+                <i class="far fa-lightbulb"></i>
+                Rating :
+                <%if(rating===0){%>
+                    &nbsp;&nbsp; -
+                    <%} else{%>
+                    <%for(let i=0;i<rating;i++){%>
+                    <i class="fas fa-star"></i>
+                    <%}%>
+                <%}%>
+            </p>
+        </div>
 
+        <div class="user-properties-2">
+            <img src="/uploads/images/<%= user.image %> " alt="">
+            <form action="/users/<%=username%>/imageUpload" method="POST" role="form"
+                enctype="multipart/form-data">
+                <input type="file" 
+                class="form-control-file" name="image">
+                <br>
+                <button type="submit">Upload</button>
+            </form>
+        </div>
+    </div>
     <div class="container">
         <div class="row">
             <div class=" user-stats-div col-lg-4 col-md-6">
                 <div>
-
                     <h4> Number of Questions
                         <br>
                         <%if(username===user.username){%>
@@ -71,7 +76,6 @@
                 <br>
                 <h2 class="user-stats"><%=user.questions.length%></h2>
                 </div>
-
             </div>
             <div class="user-stats-div col-lg-4 col-md-6">
                 <div>
@@ -135,25 +139,19 @@
             </div>
         </div>
     </div>
-
     <%} else{%>
-
     <div class="user-questions-div">
-
         <%if(arr.length===0){%>
         <p style="padding-top: 50px;padding-left:100px;color:#6e7c7c;;">No Questions <%=cls%></p>
         <%}%>
         <%for(let i=0;i<arr.length;i++){%>
             <div class="user-questions-div-div">
-
             <p><a class="list-a" href="/questions/<%=arr[i].id%>"><%=arr[i].title%></a></p>
-
             <a class="upvote-a" href="/questions/<%=arr[i].id%>">
                 <div class="list-upvote-div">
                     Upvotes
                     <br>
                     <%=arr[i].upvote%>
-
                 </div>
                 <div class="list-upvote-div">
                     Answers
@@ -161,7 +159,6 @@
                     <%=arr[i].answers.length%>
                 </div>
             </a>
-
             <%if(cls==="asked"){%>
             <div class="list-upvote-div askedby">
                 asked
@@ -177,12 +174,10 @@
         
             <%}%>
             <hr class="user-ques-hr">
-
         </div>
-
     <%}%>
-
             <%}%>
 </div>
-
 <%- include('partials/footer') %>
+
+                

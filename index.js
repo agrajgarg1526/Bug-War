@@ -24,7 +24,7 @@ app.use(
     extended: true,
   })
 );
-app.use(express.static("public"));
+app.use(express.static(__dirname + "/public"));
 
 app.use(
   expressSession({
@@ -54,6 +54,7 @@ app.use(function (req, res, next) {
   res.locals.isAuthenticated = req.isAuthenticated();
 
   if (req.user) {
+    res.locals.pic = req.user.image;
     res.locals.username = req.user.username;
     res.locals.link = "/users/" + req.user.username;
     res.locals.tiny_api =
@@ -145,7 +146,6 @@ passport.deserializeUser(function (user, done) {
 
 ////////////////PASSPORT GOOGLE STRATEGY//////////////
 
-// let a;
 var GoogleStrategy = require("passport-google-oauth20").Strategy;
 
 passport.use(
@@ -156,9 +156,6 @@ passport.use(
       callbackURL: "https://bug-war.herokuapp.com/auth/google/bugwar",
     },
     function (accessToken, refreshToken, profile, cb) {
-      // console.log(profile.emails[0].value);
-      // console.log(profile);
-      // a = profile;
       let extractedUser = profile.emails[0].value.substring(
         0,
         profile.emails[0].value.indexOf("@")
@@ -167,7 +164,7 @@ passport.use(
         {
           username: extractedUser,
           email: profile.emails[0].value,
-          image: noprofile.jpg,
+          image: "noprofile.jpg",
         },
         function (err, user) {
           return cb(err, user);
@@ -190,7 +187,6 @@ app.get(
     failureRedirect: "/login",
   }),
   function (req, res) {
-    console.log(a);
     // Successful authentication, redirect home.
     // console.log(req.user.googleId);
     res.redirect("/");
@@ -211,7 +207,7 @@ passport.use(
       profileFields: ["id", "emails", "name"],
     },
     function (accessToken, refreshToken, profile, cb) {
-      // console.log(profile);
+      console.log(profile);
       let extractedUser = profile.emails[0].value.substring(
         0,
         profile.emails[0].value.indexOf("@")
@@ -220,6 +216,7 @@ passport.use(
         {
           username: extractedUser,
           email: profile.emails[0].value,
+          image: "noprofile.jpg",
         },
         function (err, user) {
           return cb(err, user);
@@ -299,6 +296,7 @@ app.post("/signup", function (req, res) {
           {
             username: req.body.username,
             email: req.body.email,
+            image: "noprofile.jpg",
           },
           req.body.password,
           function (err, user) {
@@ -796,7 +794,23 @@ app.post(
   "/users/:username/imageUpload",
   upload.single("image"),
   function (req, res) {
-    console.log(req.body);
-    console.log(req.file);
+    let username = req.params.username;
+
+    if (req.file) {
+      User.findOne(
+        {
+          username: req.params.username,
+        },
+        function (err, foundUser) {
+          if (err) console.log(err);
+          else {
+            // console.log(req.file);
+            foundUser.image = req.file.filename;
+            foundUser.save();
+          }
+        }
+      );
+    }
+    res.redirect("/users/" + req.params.username);
   }
 );

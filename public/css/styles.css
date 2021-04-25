@@ -20,6 +20,12 @@ html {
   /* position:fixed; */
 }
 
+.nav-img {
+  width: 35px;
+  height: 35px;
+  border-radius: 100%;
+}
+
 .navbar-nav {
   margin-left: auto;
 }
@@ -302,15 +308,45 @@ html {
   padding: 80px 80px 0px;
 }
 
+.user-properties p {
+  font-size: 1em;
+}
+
+.user-username {
+  font-size: 1.6em;
+}
+
 .user-username {
   color: #ce1212;
 }
 .user-properties {
   border: 1px solid black;
-  padding: 70px 70px;
   margin-bottom: 75px;
 }
 
+.user-properties div {
+  display: inline-block;
+}
+
+.user-properties-1 {
+  margin: 71px 14px 85px 129px;
+}
+.user-properties-2 {
+  margin: 18px 235px 0 0;
+  float: right;
+}
+
+.user-properties form input {
+  margin: 22px 0 18px 12px;
+}
+
+.user-properties form button {
+  margin: 0px 0 -12px 80px;
+}
+img {
+  width: 220px;
+  height: 220px;
+}
 .user-email {
   font-size: 1.3rem;
   margin: 40px 0px;
@@ -372,11 +408,69 @@ a,
   .btn-group-question {
     margin: 50px -272px 0 0;
   }
+
+  .user-properties-1 {
+    margin: 71px 14px 85px 100px;
+  }
+  .user-properties-2 {
+    margin: 52px 146px 0 0;
+  }
+
+  img {
+    width: 210px;
+    height: 210px;
+  }
+  .user-properties p {
+    font-size: 0.9em;
+  }
+
+  .user-username {
+    font-size: 1.6em;
+  }
+
+  .user-properties form input {
+    margin: 22px 0 18px 12px;
+    font-size: 0.8rem;
+  }
+
+  .user-properties form button {
+    margin: 0px -50px -12px 70px;
+    font-size: 0.8rem;
+  }
 }
 
 @media (max-width: 1100px) {
   .question-div {
     margin: 50px 250px 50px 220px;
+  }
+
+  .user-properties-1 {
+    margin: 71px 14px 85px 80px;
+  }
+  .user-properties-2 {
+    margin: 30px 36px 0 0;
+  }
+
+  img {
+    width: 180px;
+    height: 180px;
+  }
+  .user-properties p {
+    font-size: 0.85em;
+  }
+
+  .user-username {
+    font-size: 1.4em;
+  }
+
+  .user-properties form input {
+    margin: 22px 0 18px 12px;
+    font-size: 0.7rem;
+  }
+
+  .user-properties form button {
+    margin: 0px 0 -12px 80px;
+    font-size: 0.7rem;
   }
 }
 
@@ -473,6 +567,35 @@ a,
   .question-div {
     margin: 55px 180px 0 120px;
   }
+
+  .user-properties-1 {
+    margin: 71px 14px 85px 70px;
+  }
+  .user-properties-2 {
+    margin: 60px -10px 0 0;
+  }
+
+  img {
+    width: 130px;
+    height: 130px;
+  }
+  .user-properties p {
+    font-size: 0.7em;
+  }
+
+  .user-username {
+    font-size: 1.1em;
+  }
+
+  .user-properties form input {
+    margin: 22px 0 18px 12px;
+    font-size: 0.6rem;
+  }
+
+  .user-properties form button {
+    margin: 0px 0 -12px 50px;
+    font-size: 0.6rem;
+  }
 }
 
 @media (max-width: 768px) {
@@ -480,6 +603,9 @@ a,
     padding: 84px 0 0 0;
   }
 
+  .user-stats-div h4 {
+    font-size: 1.3rem;
+  }
   .local-login {
     text-align: center;
     background-color: white;
@@ -520,17 +646,9 @@ a,
     padding: 80px 40px;
   }
 
-  .user-properties p {
-    font-size: 1.1em;
-  }
-
-  .user-username {
+  /* .user-username {
     font-size: 1.6em;
-  }
-
-  .user-properties {
-    padding: 50px 50px;
-  }
+  } */
 
   .user-questions-div {
     width: 80%;
@@ -667,11 +785,41 @@ a,
   .ask-submit {
     padding: 0 7px 0 36px;
   }
+
+  .user-properties-1 {
+    margin: 71px 14px 85px 70px;
+  }
+  .user-properties-2 {
+    margin: 60px 0px 0 0;
+  }
 }
 
 @media (max-width: 700px) {
   .question-div {
     margin: 145px 16px 0px 110px;
+  }
+
+  .user-properties-1 {
+    margin: 71px 14px 85px 50px;
+  }
+  .user-properties-2 {
+    margin: 60px 20px 0 0;
+  }
+
+  img {
+    width: 110px;
+    height: 110px;
+  }
+  .user-properties p {
+    font-size: 0.6em;
+  }
+
+  .user-username {
+    font-size: 0.9em;
+  }
+
+  .user-form button {
+    font-size: 1rem;
   }
 }
 
@@ -679,25 +827,79 @@ a,
   .question-div {
     margin: 145px 16px 0px 90px;
   }
+
+  .user-stats-div h4 {
+    font-size: 1.1rem;
+  }
+  .user-properties-1 {
+    margin: 71px 14px 85px 50px;
+  }
+  .user-properties-2 {
+    margin: 60px 20px 0 0;
+  }
+
+  img {
+    width: 90px;
+    height: 90px;
+  }
+
+  .user-properties form input {
+    margin: 22px 0 18px 12px;
+    font-size: 0.5rem;
+  }
+
+  .user-properties form button {
+    margin: 0px 0 -12px 50px;
+    font-size: 0.5rem;
+  }
+}
+
+@media (max-width: 550px) {
+  .user-properties-1 {
+    margin: 71px 14px 85px 30px;
+  }
+  .user-properties-2 {
+    margin: 60px 0px 0 0;
+  }
+
+  img {
+    width: 80px;
+    height: 80px;
+  }
+
+  .user-properties form input {
+    margin: 10px 0 10px 0px;
+    font-size: 0.5rem;
+  }
+
+  .user-properties form button {
+    margin: 10px 0 -12px 30px;
+    font-size: 0.5rem;
+  }
+  .user-form button {
+    font-size: 0.8rem;
+  }
 }
 
 @media (max-width: 500px) {
   .question-div {
     margin: 145px 16px 0px 70px;
   }
+  .user-stats-div h4 {
+    font-size: 0.9rem;
+  }
+
+  .user-properties-1 {
+    margin: 71px 14px 85px 10px;
+  }
+  .user-properties-2 {
+    margin: 60px -40px 0 -20px;
+  }
 }
 
 @media (max-width: 492px) {
   .user {
     padding: 40px 20px 10px;
-  }
-
-  .user-properties p {
-    font-size: 0.8em;
-  }
-
-  .user-username {
-    font-size: 1.3em;
   }
 
   .user-properties {
@@ -780,6 +982,36 @@ a,
   /* .btn-div{
     padding: 0 0 0 0;
   } */
+  .user-properties-1 {
+    margin: 71px 14px 85px 0px;
+  }
+  .user-properties-2 {
+    margin: 60px -40px 0 0;
+  }
+}
+
+@media (max-width: 450px) {
+  .user-properties-1 {
+    margin: 71px 14px 85px -10px;
+  }
+  .user-properties-2 {
+    margin: 60px -40px 0 -50px;
+  }
+
+  img {
+    width: 80px;
+    height: 80px;
+  }
+
+  .user-properties form input {
+    margin: 10px 0 10px 0px;
+    font-size: 0.5rem;
+  }
+
+  .user-properties form button {
+    margin: 10px 0 -12px 30px;
+    font-size: 0.5rem;
+  }
 }
 
 @media (max-width: 400px) {
@@ -787,6 +1019,12 @@ a,
     margin: 145px 16px 0px 55px;
   }
 
+  .user-form button {
+    font-size: 0.6rem;
+  }
+  .user-stats-div h4 {
+    font-size: 0.8rem;
+  }
   .askquestion {
     float: left;
     margin-top: 12px;
@@ -808,6 +1046,34 @@ a,
     right: 240px;
     top: -25px;
   }
+  .user-properties-1 {
+    margin: 50px 14px 60px 0px;
+  }
+  .user-properties-2 {
+    margin: 60px -10px 0 0;
+  }
+
+  img {
+    width: 70px;
+    height: 70px;
+  }
+  .user-properties p {
+    font-size: 0.5em;
+  }
+
+  .user-username {
+    font-size: 0.7em;
+  }
+
+  .user-properties form input {
+    margin: 10px 0 0px 0px;
+    font-size: 0.3rem;
+  }
+
+  .user-properties form button {
+    margin: 10px 0 -12px 30px;
+    font-size: 0.3rem;
+  }
 }
 
 @media (max-width: 370px) {
@@ -819,6 +1085,37 @@ a,
     margin: -34px 0 0 20px;
   }
 }
+@media (max-width: 350px) {
+  .user-properties-1 {
+    margin: 50px 14px 60px -10px;
+  }
+  .user-properties-2 {
+    margin: 60px -32px 0 -10px;
+  }
+
+  img {
+    width: 60px;
+    height: 60px;
+  }
+  .user-properties p {
+    font-size: 0.4em;
+  }
+
+  .user-username {
+    font-size: 0.6em;
+  }
+
+  .user-properties form input {
+    margin: 10px 0 0px 0px;
+    font-size: 0.3rem;
+  }
+
+  .user-properties form button {
+    margin: 10px 0 -12px 30px;
+    font-size: 0.3rem;
+  }
+}
+
 @media (min-width: 480px) {
   .home-block {
     font-family: "Roboto", sans-serif;
