@@ -664,7 +664,7 @@ a,
     margin: 0 -80px 0 0px;
   }
 
-  .ask-submit{
+  .ask-submit {
     padding: 0 7px 0 36px;
   }
 }
@@ -810,12 +810,12 @@ a,
   }
 }
 
-@media(max-width:370px){
-  .list-form{
+@media (max-width: 370px) {
+  .list-form {
     padding: 42px 0 0 0;
   }
 
-  .list-form button{
+  .list-form button {
     margin: -34px 0 0 20px;
   }
 }

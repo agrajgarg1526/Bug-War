@@ -3,6 +3,7 @@ const express = require("express");
 const bodyParser = require("body-parser");
 require("dotenv").config();
 
+const multer = require("multer");
 const app = express();
 
 const mongoose = require("mongoose");
@@ -114,6 +115,7 @@ const UserDetail = new mongoose.Schema({
     type: Date,
     default: Date.now,
   },
+  image: String,
 });
 
 UserDetail.plugin(findOrCreate);
@@ -143,6 +145,7 @@ passport.deserializeUser(function (user, done) {
 
 ////////////////PASSPORT GOOGLE STRATEGY//////////////
 
+// let a;
 var GoogleStrategy = require("passport-google-oauth20").Strategy;
 
 passport.use(
@@ -154,7 +157,8 @@ passport.use(
     },
     function (accessToken, refreshToken, profile, cb) {
       // console.log(profile.emails[0].value);
-
+      // console.log(profile);
+      // a = profile;
       let extractedUser = profile.emails[0].value.substring(
         0,
         profile.emails[0].value.indexOf("@")
@@ -163,6 +167,7 @@ passport.use(
         {
           username: extractedUser,
           email: profile.emails[0].value,
+          image: noprofile.jpg,
         },
         function (err, user) {
           return cb(err, user);
@@ -185,6 +190,7 @@ app.get(
     failureRedirect: "/login",
   }),
   function (req, res) {
+    console.log(a);
     // Successful authentication, redirect home.
     // console.log(req.user.googleId);
     res.redirect("/");
@@ -212,7 +218,7 @@ passport.use(
       );
       User.findOrCreate(
         {
-           username: extractedUser,
+          username: extractedUser,
           email: profile.emails[0].value,
         },
         function (err, user) {
@@ -314,9 +320,6 @@ app.post("/signup", function (req, res) {
 });
 
 app.get("/users/:username", function (req, res) {
-  // console.log(req.query);
-  // if (req.user) {
-  // logged in
   User.findOne(
     {
       username: req.params.username,
@@ -324,9 +327,7 @@ app.get("/users/:username", function (req, res) {
     function (err, foundUser) {
       if (err) console.log(err);
       else {
-        let cls,
-          arr,
-          title;
+        let cls, arr, title;
         if (
           req.query.questions === "profile" ||
           Object.keys(req.query).length === 0
@@ -336,15 +337,12 @@ app.get("/users/:username", function (req, res) {
         } else if (req.query.questions === "asked") {
           cls = "asked";
           arr = foundUser.questions;
-          // title = "Questions You Asked";
         } else if (req.query.questions === "upvoted") {
           cls = "upvoted";
           arr = foundUser.upvotedQuestions;
-          // title = "Questions You Upvoted";
         } else if (req.query.questions === "answered") {
           cls = "answered";
           arr = foundUser.answeredQuestions;
-          // title = "Questions You Answered";
         }
 
         let answers = foundUser.answeredQuestions;
@@ -353,7 +351,6 @@ app.get("/users/:username", function (req, res) {
           .where("_id")
           .in(arr)
           .exec((err, records) => {
-            // console.log(records+"\n\n\n");
             let rating = 0,
               rating1 = 0,
               rating2 = 0,
@@ -366,12 +363,10 @@ app.get("/users/:username", function (req, res) {
 
             if (cls === "profile") {
               for (let i = 0; i < records.length; i++) {
-                // console.log(records[i].answers.length);
                 for (let j = 0; j < records[i].answers.length; j++) {
                   if (
                     records[i].answers[j].answeredBy === req.params.username
                   ) {
-                    // console.log(records[i].answers[j]);
                     totalAnswers++;
                     if (records[i].answers[j].upvote >= 1) goodAnswers++;
                     upvoteAnswers += records[i].answers[j].upvote;
@@ -380,14 +375,13 @@ app.get("/users/:username", function (req, res) {
               }
               rating1 =
                 totalAnswers === 0 ? 0 : (goodAnswers * 100) / totalAnswers;
-            
+
               let questions = foundUser.questions;
 
               Question.find()
                 .where("_id")
                 .in(questions)
                 .exec((err, records) => {
-                  // console.log(records);
                   totalQuestions = records.length;
                   for (let i = 0; i < records.length; i++) {
                     if (records[i].upvote >= 1) goodQuestions++;
@@ -425,16 +419,14 @@ app.get("/users/:username", function (req, res) {
                     upvoteAnswers: upvoteAnswers,
                   });
                 });
-            
-              }
-              else{
-                res.render("user", {
-                  user: foundUser,
-                  date: helper,
-                  cls: cls,
-                  arr: records,
-                });
-              }
+            } else {
+              res.render("user", {
+                user: foundUser,
+                date: helper,
+                cls: cls,
+                arr: records,
+              });
+            }
           });
       }
     }
@@ -783,3 +775,28 @@ app.post("/deleteQues/:questionID", function (req, res) {
     }
   });
 });
+
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, "public/uploads/images");
+  },
+  filename: function (req, file, cb) {
+    cb(null, Date.now() + file.originalname);
+  },
+});
+
+const upload = multer({
+  storage: storage,
+  limits: {
+    fieldSize: 1024 * 1024 * 3,
+  },
+});
+
+app.post(
+  "/users/:username/imageUpload",
+  upload.single("image"),
+  function (req, res) {
+    console.log(req.body);
+    console.log(req.file);
+  }
+);

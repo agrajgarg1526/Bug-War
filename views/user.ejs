@@ -50,6 +50,11 @@
             <%}%>
             <%}%>
         </p>
+        <img src="/uploads/iamges" alt="">
+        <form action="/users/<%=username%>/imageUpload" method="POST" role="form" enctype="multipart/form-data">
+            <input type="file" class="form-control-file" name="image">
+            <button type="submit">Upload</button>
+        </form>
     </div>
 
     <div class="container">
